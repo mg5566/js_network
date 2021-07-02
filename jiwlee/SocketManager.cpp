@@ -46,6 +46,7 @@ int		SocketManager::open_listening_sockets(Kqueue* &kq) {
 }
 
 void	SocketManager::close_listening_sockets() {
+
 	for(size_t i = 0; i < listening.size(); ++i) {
 		Listening	*ls = listening[i];
 		Connection	*c = ls->get_listening_connection();
@@ -55,7 +56,7 @@ void	SocketManager::close_listening_sockets() {
 			ls->set_listening_connection(NULL);
 		}
 		if (close_socket(ls->get_fd()) == -1) {
-			log_error(LOG_EMERG, "close_socket() failed");
+			logger->log_error(LOG_EMERG, "close() socket %s failed", ls->get_addr_text().c_str());
 		}
 		delete ls;
 	}
@@ -67,7 +68,7 @@ Connection*		SocketManager::get_connection(socket_t s) {
 
 	c = free_connections;
 	if (c == NULL) {
-		log_error(LOG_ALERT, "worker_connections are not enough");
+		logger->log_error(LOG_ALERT, "%u worker_connections are not enough", connection_n);
 		return NULL;
 	}
 	free_connections = (Connection*)c->get_data();
@@ -90,7 +91,7 @@ void	SocketManager::close_connection(Connection *c) {
 	fd = c->get_fd();
 	c->set_fd(-1);
 	if (close_socket(fd) == -1) {
-		log_error(LOG_ALERT, "close_socket() failed");
+		logger->log_error(LOG_ALERT, "close() socket %d failed", fd);
 	}
 }
 

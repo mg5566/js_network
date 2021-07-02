@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <map>
 #include <vector>
+#include <fstream>
 
 typedef	int					socket_t;
 typedef intptr_t			int_t;
@@ -38,12 +39,18 @@ typedef u_short				in_port_t;
 #define LOG_NOTICE			6
 #define LOG_INFO			7
 #define LOG_DEBUG			8
+#define LF    				(u_char) '\n'
+#define linefeed(s)			s += LF;
 
 class Kqueue;
 class SocketManager;
 class Listening;
 class Connection;
+class Logger;
 
-extern void	log_error(int level, const char *fmt);
+extern Logger	*logger;
+
+const std::string	err_levels[9] = { "", "emerge", "alert", "crit", "error", "warn", "notice", "info", "debug" };
+
 
 #endif

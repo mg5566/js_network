@@ -8,40 +8,47 @@ Listening::Listening(in_port_t port, in_addr_t ipaddr)
 	sockaddr.sin_addr.s_addr = htonl(ipaddr);
 
 	socklen = sizeof(sockaddr);
+
+	u_char	*p = (u_char *)&sockaddr.sin_addr;
+	addr_text += p[0];
+	addr_text += p[1];
+	addr_text += p[2];
+	addr_text += p[3];
+	addr_text += ":";
+	addr_text += ntohs(sockaddr.sin_port);
 }
 
 Listening::~Listening() {}
 
 int_t	Listening::open_listening_socket(SocketManager *sm) {
-	socket_t s;
+	socket_t	s;
 
 	s = socket(sockaddr.sin_family, type, 0);
 	if (s < 0) {
-		log_error(LOG_EMERG, "socket() failed");
-		// std::cerr << "fail to connect..." << std::endl;
+		logger->log_error(LOG_EMERG, "socket() %s failed", addr_text.c_str());
 		return WEBSERV_ERROR;
 	}
 	if (nonblocking(s) == -1) {
-		log_error(LOG_EMERG, "nonblocking() failed");
+		logger->log_error(LOG_EMERG, "fcntl(O_NONBLOCK) %s failed", addr_text.c_str());
 		if (close_socket(s) == -1) {
-			log_error(LOG_EMERG, "close_socket() failed");
+			logger->log_error(LOG_EMERG, "close() socket %s failed", addr_text.c_str());
 		}
 		return WEBSERV_ERROR;
 	}
 
 
 	if (bind(s, (struct sockaddr *)&sockaddr, socklen) == -1) {
-		log_error(LOG_EMERG, "bind() failed");
+		logger->log_error(LOG_EMERG, "bind() to %s failed", addr_text.c_str());
 		if (close_socket(s) == -1) {
-			log_error(LOG_EMERG, "close_socket() failed");
+			logger->log_error(LOG_EMERG, "close() socket %s failed", addr_text.c_str());
 		}
 		return WEBSERV_CONTINUE;
 	}
 
 	if (listen(s, backlog) == -1) {
-		log_error(LOG_EMERG, "listen() failed");
+		logger->log_error(LOG_EMERG, "listen() to %s failed", addr_text.c_str());
 		if (close_socket(s) == -1) {
-			log_error(LOG_EMERG, "close_socket() failed");
+			logger->log_error(LOG_EMERG, "close() socket %s failed", addr_text.c_str());
 		}
 		return WEBSERV_CONTINUE;
 	}
@@ -68,4 +75,8 @@ Connection	*Listening::get_listening_connection() const {
 
 socket_t	Listening::get_fd() const {
 	return fd;
+}
+
+const std::string		&Listening::get_addr_text() const {
+	return addr_text;
 }

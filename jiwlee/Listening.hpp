@@ -11,6 +11,7 @@ private:
 
 	struct sockaddr_in	sockaddr;
 	socklen_t			socklen;
+	std::string			addr_text;
 
 	int					type;
 	int					backlog;
@@ -27,6 +28,7 @@ public:
 
 	Connection	*get_listening_connection() const;
 	socket_t	get_fd() const;
+	const std::string	&get_addr_text() const;
 };
 
 #endif

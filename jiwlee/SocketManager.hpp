@@ -5,6 +5,7 @@
 #include "Kqueue.hpp"
 #include "Listening.hpp"
 #include "Connection.hpp"
+#include "Logger.hpp"
 
 class SocketManager {
 private:

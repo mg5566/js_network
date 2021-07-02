@@ -1,5 +1,7 @@
-#include "webserv.hpp"
 #include "Cycle.hpp"
+#include <map>
+
+Logger		*logger;
 
 int main(void)
 {

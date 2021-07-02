@@ -21,17 +21,19 @@ int_t	Kqueue::kqueue_init()
 	if (kq == -1) {
 		kq = kqueue();
 		if (kq == -1) {
-			log_error(LOG_EMERG, "kqueue() failed");
+			logger->log_error(LOG_EMERG, "kqueue() failed");
 			return WEBSERV_ERROR;
 		}
 	}
 
 	change_list = new struct kevent[kcf.changes]();
 	if (change_list == NULL) {
+		logger->log_error(LOG_EMERG, "malloc(%u) failed", (size_t)kcf.changes);
 		return WEBSERV_ERROR;
 	}
 	event_list = new struct kevent[kcf.events]();
 	if (event_list == NULL) {
+		logger->log_error(LOG_EMERG, "malloc(%u) failed", (size_t)kcf.events);
 		return WEBSERV_ERROR;
 	}
 	max_changes = kcf.changes;
@@ -41,7 +43,7 @@ int_t	Kqueue::kqueue_init()
 
 void	Kqueue::kqueue_done() {
 	if (close(kq) == -1) {
-		log_error(LOG_ALERT, "kqueue close() failed");
+		logger->log_error(LOG_ALERT, "kqueue close() failed");
 	}
 	kq = -1;
 	delete[] change_list;
@@ -56,11 +58,6 @@ int		Kqueue::kqueue_add_event(Connection *c, u_short flags, u_int fflag)
 {
 	EV_SET(&change_list[nchanges], c->get_fd(), flags, fflag, 0, 0, c);	// udata = Connection
 	++nchanges;
-	// if (kevent(kq, change_list, nchanges, NULL, 0, NULL) == -1) {
-	// 	log_error(LOG_ALERT, "kevent(EVFILT_READ, EV_ADD) failed");
-	// 	return WEBSERV_ERROR;
-	// }
-	// nchanges = 0;
 	return WEBSERV_OK;
 }
 
@@ -68,11 +65,6 @@ int		Kqueue::kqueue_del_event(Connection *c, u_short flags, u_int fflag)
 {
 	EV_SET(&change_list[nchanges], c->get_fd(), flags, fflag, 0, 0, c);	// udata = Connection
 	++nchanges;
-	// if (kevent(kq, change_list, nchanges, NULL, 0, NULL) == -1) {
-	// 	log_error(LOG_ALERT, "kevent(EVFILT_READ, EV_DELETE) failed");
-	// 	return WEBSERV_ERROR;
-	// }
-	// nchanges = 0;
 	return WEBSERV_OK;
 }
 
@@ -83,7 +75,7 @@ int_t	Kqueue::kqueue_process_events(SocketManager *sm)
 	events = kevent(kq, change_list, nchanges, event_list, nevents, &ts);
 	nchanges = 0;
 	if (events == -1) {
-		log_error(LOG_ALERT, "kevent() failed");
+		logger->log_error(LOG_ALERT, "kevent() failed");
 		return WEBSERV_ERROR;
 	}
 
@@ -91,12 +83,11 @@ int_t	Kqueue::kqueue_process_events(SocketManager *sm)
 		Connection *c = (Connection*)event_list[i].udata;
 
 		if (event_list[i].flags & EV_ERROR) {
-			// log_error(NGX_LOG_ALERT, "kevent() error on %d filter:%d flags:%04Xd", (int) event_list[i].ident, event_list[i].filter, event_list[i].flags);
+			logger->log_error(LOG_ALERT, "kevent() error on %d filter:%d", (int) event_list[i].ident, event_list[i].filter);
 			continue ;
 		}
 		if (event_list[i].flags & EV_EOF) {
-			// log_error();
-			std::cout << "Client disconnected..." << std::endl;
+			logger->log_error(LOG_ALERT, "kevent() reported about an closed connection");
 			kqueue_del_event(c, EVFILT_READ, EV_DELETE);
 			sm->close_connection(c);
 		}
