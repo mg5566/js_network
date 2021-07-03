@@ -95,16 +95,32 @@ int_t	Kqueue::kqueue_process_events(SocketManager *sm)
 			Connection *conn = c->event_accept(sm);
 			kqueue_add_event(conn, EVFILT_READ, EV_ADD);
 		}
-		else
-		{
-			// std::cout << "data: " << event_list[i].data << std::endl;
-			recv(c->get_fd(), c->buffer, event_list[i].data, 0);
-			// parsing후 처리하는 부분
+		else if (event_list[i].filter == EVFILT_READ) {
+			std::cout << c->get_fd() << " can read!" << std::endl;
+			recv(c->get_fd(), c->buffer, BUF_SIZE, 0);
 			std::cout << c->buffer << std::endl;
-			// response 만들어서 send하는 부분
-			send(c->get_fd(), c->buffer, strlen(c->buffer), 0);
-			memset(c->buffer, 0, event_list[i].data);
+			std::cout << c->get_fd() << " read end." << std::endl;
+			kqueue_add_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
 		}
+		else if (event_list[i].filter == EVFILT_WRITE) {
+			std::cout << c->get_fd() << " can write!" << std::endl;
+			std::string temp;
+			while (!(std::cin >> temp))
+				;
+			temp += "\n";
+			send(c->get_fd(), temp.c_str(), temp.size(), 0);
+			memset(c->buffer, 0, event_list[i].data);
+			std::cout << c->get_fd() << " write end." << std::endl;
+		}
+		// else
+		// {
+		// 	recv(c->get_fd(), c->buffer, event_list[i].data, 0);
+		// 	std::cout << c->buffer << std::endl;
+		// 	// kqueue_add_event();
+		// 	//response 만들어서 send하는 부분
+		// 	send(c->get_fd(), c->buffer, strlen(c->buffer), 0);
+		// 	memset(c->buffer, 0, event_list[i].data);
+		// }
 	}
 	return WEBSERV_OK;
 }
