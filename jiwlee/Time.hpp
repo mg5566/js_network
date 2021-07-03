@@ -9,7 +9,6 @@ class Time {
 private:
 	struct timeval	tv;
 	time_t			sec;
-	struct tm		time;		// https://www.cplusplus.com/reference/ctime/tm/
 
 	std::string		data;
 

@@ -4,40 +4,14 @@ Time::Time() {}
 Time::~Time() {}
 
 void	Time::set_time() {
-	// time setting
+	std::stringstream ss;
+	char	buf[20];
+
 	gettimeofday(&tv, NULL);
 	sec = tv.tv_sec;
-	webserv_localtime(sec, &time);
-
-	std::stringstream ss;
-
-	ss << time.tm_year;
-	ss << "/";
-	time.tm_mon < 10 ? ss << "0" : NULL;
-	ss << time.tm_mon;
-	ss << "/";
-	time.tm_mday < 10 ? ss << "0" : NULL;
-	ss << time.tm_mday;
-	ss << " ";
-	time.tm_hour < 10 ? ss << "0" : NULL;
-	ss << time.tm_hour;
-	ss << ":";
-	time.tm_min < 10 ? ss << "0" : NULL;
-	ss << time.tm_min;
-	ss << ":";
-	time.tm_sec < 10 ? ss << "0" : NULL;
-	ss << time.tm_sec;
-
+	strftime(buf, sizeof(buf), "%Y/%m/%d %H:%M:%S", localtime(&sec));
+	ss << buf;
 	data = ss.str();
-}
-
-void	Time::webserv_localtime(time_t s, struct tm *time) {
-	struct tm *t;
-
-	t = localtime(&s);
-	*time = *t;
-	++time->tm_mon;
-	time->tm_year += 1900;
 }
 
 const std::string	&Time::get_time_data() const {
