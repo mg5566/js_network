@@ -72,17 +72,11 @@ Connection*		SocketManager::get_connection(socket_t s) {
 	free_connections = (Connection*)c->get_data();
 	--free_connection_n;
 	c->set_fd(s);
-	// c = connections.front();
-	// ++conn_it
 
 	return c;
 }
 
 void	SocketManager::free_connection(Connection *c) {
-	// if (c->get_fd() != -1) {
-	// 	close_socket(c->get_fd());
-	// 	c->set_fd(-1);
-	// }
 	c->set_data(free_connections);
 	free_connections = c;
 	++free_connection_n;
