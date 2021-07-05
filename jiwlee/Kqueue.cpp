@@ -79,18 +79,18 @@ int_t	Kqueue::kqueue_process_events(SocketManager *sm)
 		return WEBSERV_ERROR;
 	}
 	for (int_t i = 0; i < events; ++i) {
+		Connection *c = (Connection*)event_list[i].udata;
+
 		if (event_list[i].flags & EV_ERROR) {
 			logger->log_error(LOG_ALERT, "kevent() error on %d filter:%d", (int) event_list[i].ident, (int) event_list[i].filter);
 			continue ;
 		}
 		if (event_list[i].flags & EV_EOF) {
-			Connection *c = (Connection*)event_list[i].udata;
 			logger->log_error(LOG_ALERT, "kevent() reported about an closed connection");
 			kqueue_del_event(c, EVFILT_READ, EV_DELETE);
 			sm->close_connection(c);
 		}
 		else if (event_list[i].filter == EVFILT_READ) {
-			Connection *c = (Connection*)event_list[i].udata;
 			if (c->get_listen()) {
 				Connection *conn = c->event_accept(sm);
 				kqueue_add_event(conn, EVFILT_READ, EV_ADD);
@@ -102,7 +102,6 @@ int_t	Kqueue::kqueue_process_events(SocketManager *sm)
 			}
 		}
 		else if (event_list[i].filter == EVFILT_WRITE) {
-			Connection *c = (Connection*)event_list[i].udata;
 			std::string temp = "world!\n";
 			send(event_list[i].ident, temp.c_str(), temp.size(), 0);
 			memset(c->buffer, 0, BUF_SIZE);
