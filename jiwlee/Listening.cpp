@@ -24,6 +24,7 @@ int_t	Listening::open_listening_socket(SocketManager *sm) {
 	socket_t	s;
 
 	s = socket(sockaddr.sin_family, type, 0);
+	std::cout << "listening socket open" << s << std::endl;
 	if (s < 0) {
 		logger->log_error(LOG_EMERG, "socket() %s failed", addr_text.c_str());
 		return WEBSERV_ERROR;

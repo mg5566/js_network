@@ -15,6 +15,8 @@ private:
 	size_t		connection_n;
 	Connection	*free_connections;
 	size_t		free_connection_n;
+	// std::list<Connection*>				connections;
+	// std::list<Connection*>::iterator	conn_it;
 
 public:
 	SocketManager(std::multimap<in_port_t, in_addr_t> &addrs, Kqueue* &kq);
@@ -31,6 +33,7 @@ public:
 
 	const std::vector<Listening*>	&get_listening() const;
 	size_t		get_listening_size() const;
+	Connection	*get_connections() const;
 };
 
 #endif

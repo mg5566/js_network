@@ -63,7 +63,7 @@ int		Kqueue::kqueue_add_event(Connection *c, u_short flags, u_int fflag)
 
 int		Kqueue::kqueue_del_event(Connection *c, u_short flags, u_int fflag)
 {
-	EV_SET(&change_list[nchanges], c->get_fd(), flags, fflag, 0, 0, c);	// udata = Connection
+	EV_SET(&change_list[nchanges], c->get_fd(), flags, fflag, 0, 0, NULL);
 	++nchanges;
 	return WEBSERV_OK;
 }
@@ -78,12 +78,11 @@ int_t	Kqueue::kqueue_process_events(SocketManager *sm)
 		logger->log_error(LOG_ALERT, "kevent() failed");
 		return WEBSERV_ERROR;
 	}
-
 	for (int_t i = 0; i < events; ++i) {
 		Connection *c = (Connection*)event_list[i].udata;
 
 		if (event_list[i].flags & EV_ERROR) {
-			logger->log_error(LOG_ALERT, "kevent() error on %d filter:%d", (int) event_list[i].ident, event_list[i].filter);
+			logger->log_error(LOG_ALERT, "kevent() error on %d filter:%d", (int) event_list[i].ident, (int) event_list[i].filter);
 			continue ;
 		}
 		if (event_list[i].flags & EV_EOF) {
@@ -91,36 +90,23 @@ int_t	Kqueue::kqueue_process_events(SocketManager *sm)
 			kqueue_del_event(c, EVFILT_READ, EV_DELETE);
 			sm->close_connection(c);
 		}
-		else if (c->get_listen()) {
-			Connection *conn = c->event_accept(sm);
-			kqueue_add_event(conn, EVFILT_READ, EV_ADD);
-		}
 		else if (event_list[i].filter == EVFILT_READ) {
-			std::cout << c->get_fd() << " can read!" << std::endl;
-			recv(c->get_fd(), c->buffer, BUF_SIZE, 0);
-			std::cout << c->buffer << std::endl;
-			std::cout << c->get_fd() << " read end." << std::endl;
-			kqueue_add_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
+			if (c->get_listen()) {
+				Connection *conn = c->event_accept(sm);
+				kqueue_add_event(conn, EVFILT_READ, EV_ADD);
+			}
+			else {
+				recv(event_list[i].ident, c->buffer, BUF_SIZE, 0);
+				std::cout << c->buffer << std::endl;
+				kqueue_add_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
+			}
 		}
 		else if (event_list[i].filter == EVFILT_WRITE) {
-			std::cout << c->get_fd() << " can write!" << std::endl;
-			std::string temp;
-			while (!(std::cin >> temp))
-				;
-			temp += "\n";
-			send(c->get_fd(), temp.c_str(), temp.size(), 0);
-			memset(c->buffer, 0, event_list[i].data);
-			std::cout << c->get_fd() << " write end." << std::endl;
+			std::string temp = "world!\n";
+			send(event_list[i].ident, temp.c_str(), temp.size(), 0);
+			memset(c->buffer, 0, BUF_SIZE);
+			kqueue_add_event(c, EVFILT_READ, EV_ADD);
 		}
-		// else
-		// {
-		// 	recv(c->get_fd(), c->buffer, event_list[i].data, 0);
-		// 	std::cout << c->buffer << std::endl;
-		// 	// kqueue_add_event();
-		// 	//response 만들어서 send하는 부분
-		// 	send(c->get_fd(), c->buffer, strlen(c->buffer), 0);
-		// 	memset(c->buffer, 0, event_list[i].data);
-		// }
 	}
 	return WEBSERV_OK;
 }

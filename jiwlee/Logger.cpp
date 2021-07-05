@@ -26,7 +26,7 @@ void	Logger::log_error(int level, const char *fmt, ...)
 
 	va_start(ap, fmt);
 	while (*fmt) {
-		uint_t	ui;
+		size_t	ui;
 		int		d;
 		char	*s;
 
@@ -56,7 +56,7 @@ void	Logger::log_error(int level, const char *fmt, ...)
 	va_end(ap);
 
 	linefeed(errstr);
-	
+
 	ofs << errstr;
 	ofs.close();
 }
