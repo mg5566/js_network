@@ -35,6 +35,4 @@ class Request_Parser {
 std::vector<std::string> split(std::string str, char limiter);
 std::vector<std::string> split_value(std::string header, std::string str);
 
-void print_parsed_data(std::map<std::string, std::string> sl, std::map<std::string, std::vector<std::string> > h, std::string e);
-
 #endif

@@ -17,16 +17,19 @@ class Event_Handler {
     // Response_Generator  generator;
 
     // 향후 nginx config 를 받을 변수
-    // HttpConfig *conf;
+    // HttpConfig config;
   public:
     Event_Handler();
     // 향후 nginx config file 을 인자로 받을 수 있도록 합니다.
-    // Event_Handler(HttpConfig *config);
+    // Event_Handler(HttpConfig config);
     ~Event_Handler();
 
     // set req msg
     void set_request_message(char *buf);
     void set_request_message(const char *buf);
+
+    // set nginx config
+    // void set_http_config(HttpConfig &config);
 
     // 발생된 event 를 처리합니다.
     void process_event(char *buf);

@@ -3,7 +3,7 @@
 Event_Handler::Event_Handler() {
 }
 
-// Event_Handler::Event_Handler(HttpConfig *config) : conf(config){
+// Event_Handler::Event_Handler(HttpConfig config) : conf(config){
 // }
 
 Event_Handler::~Event_Handler() {}
@@ -18,9 +18,19 @@ void Event_Handler::set_request_message(const char *buf) {
   origin_message = buf;
 }
 
+/*
+void Event_Handler::set_http_config(const HttpConfig config) {
+  this->config = config;
+}
+*/
+
 void Event_Handler::process_event(char *buf) {
   // 0. client 에게 message 받기
   set_request_message(buf);
+
+  // 0. config instance 받기, 1번만 setting 하면 되는데, 어찌 처리하는게 좋을까?!
+  // if (!config)
+  //   set_config(config);
 
   // 1. message parsing 하기
   // parsing 된 data 는 Request_Message 구조체에 저장합니다.
