@@ -19,8 +19,7 @@ void	SocketManager::init_socket_manager(std::multimap<in_port_t, in_addr_t> &add
 		Listening *ls = new Listening(it->first, it->second);
 		listening.push_back(ls);
 	}
-
-	// connection socket들 할당
+	//connection socket들 할당
 	connection_n = DEFAULT_CONNECTIONS;
 	connections = new Connection[connection_n]();
 
@@ -31,7 +30,6 @@ void	SocketManager::init_socket_manager(std::multimap<in_port_t, in_addr_t> &add
 		c[i].set_fd(-1);
 		next = &c[i];
 	}
-
 	free_connections = next;
 	free_connection_n = connection_n;
 }
@@ -74,11 +72,17 @@ Connection*		SocketManager::get_connection(socket_t s) {
 	free_connections = (Connection*)c->get_data();
 	--free_connection_n;
 	c->set_fd(s);
+	// c = connections.front();
+	// ++conn_it
+
 	return c;
 }
 
-
 void	SocketManager::free_connection(Connection *c) {
+	// if (c->get_fd() != -1) {
+	// 	close_socket(c->get_fd());
+	// 	c->set_fd(-1);
+	// }
 	c->set_data(free_connections);
 	free_connections = c;
 	++free_connection_n;
@@ -101,4 +105,8 @@ const std::vector<Listening*>	&SocketManager::get_listening() const {
 
 size_t	SocketManager::get_listening_size() const {
 	return listening.size();
+}
+
+Connection	*SocketManager::get_connections() const {
+	return connections;
 }

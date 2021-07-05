@@ -14,8 +14,7 @@ Connection	*Connection::event_accept(SocketManager *sm) {
 	socklen_t			conn_socklen;
 
 	socket_t s = accept(fd, (struct sockaddr *)&conn_sockaddr, &conn_socklen);
-
-	logger->log_error(LOG_ALERT, "accept() complete");
+	
 	if (s == -1) {
 		logger->log_error(LOG_ALERT, "accept() failed");
 		return NULL;

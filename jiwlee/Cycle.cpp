@@ -5,7 +5,6 @@ Cycle::Cycle(std::multimap<in_port_t, in_addr_t> &addrs) {
 	sm = new SocketManager(addrs, kq);
 	logger = new Logger();
 
-	// open("error.log", O_RDONLY | O_CREAT | O_TRUNC);
 	webserv_cycle();
 }
 
