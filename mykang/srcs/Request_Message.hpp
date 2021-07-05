@@ -11,6 +11,4 @@ struct Request_Message {
     std::string entity_body_str;
 };
 
-
-
 #endif
