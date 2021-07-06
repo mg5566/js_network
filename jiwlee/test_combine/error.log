@@ -1,69 +1,12 @@
-2021/07/05 19:27:07 [alert] kevent() reported about an closed connection 7
-2021/07/05 19:27:07 [alert] kevent() error on 7 filter:-1
-2021/07/05 19:27:07 [alert] kevent() reported about an closed connection 8
-2021/07/05 19:27:07 [alert] kevent() reported about an closed connection 9
-2021/07/05 19:27:07 [alert] kevent() reported about an closed connection 10
-2021/07/05 19:27:07 [alert] kevent() error on 8 filter:-1
-2021/07/05 19:27:07 [alert] kevent() error on 9 filter:-1
-2021/07/05 19:27:07 [alert] kevent() error on 10 filter:-1
-2021/07/05 19:27:07 [alert] kevent() reported about an closed connection 11
-2021/07/05 19:27:07 [alert] kevent() error on 11 filter:-1
-2021/07/05 19:28:21 [alert] 2 kevent() reported about an closed connection 7
-2021/07/05 19:28:21 [alert] 1 kevent() error on 7 filter:-1
-2021/07/05 19:28:21 [alert] 4 kevent() reported about an closed connection 8
-2021/07/05 19:28:21 [alert] 4 kevent() reported about an closed connection 9
-2021/07/05 19:28:21 [alert] 4 kevent() reported about an closed connection 10
-2021/07/05 19:28:21 [alert] 4 kevent() reported about an closed connection 11
-2021/07/05 19:28:21 [alert] 4 kevent() error on 8 filter:-1
-2021/07/05 19:28:21 [alert] 4 kevent() error on 9 filter:-1
-2021/07/05 19:28:21 [alert] 4 kevent() error on 10 filter:-1
-2021/07/05 19:28:21 [alert] 4 kevent() error on 11 filter:-1
-
-2021/07/05 19:30:45 [alert] 1 kevent() reported about an closed connection 7
-2021/07/05 19:30:45 [alert] 1 kevent() error on 7 filter:-1, 1 0
-2021/07/05 19:30:45 [alert] 4 kevent() reported about an closed connection 8
-2021/07/05 19:30:45 [alert] 4 kevent() reported about an closed connection 10
-2021/07/05 19:30:45 [alert] 4 kevent() reported about an closed connection 9
-2021/07/05 19:30:45 [alert] 4 kevent() reported about an closed connection 11
-2021/07/05 19:30:45 [alert] 4 kevent() error on 8 filter:-1, 1 0
-2021/07/05 19:30:45 [alert] 4 kevent() error on 10 filter:-1, 1 0
-2021/07/05 19:30:45 [alert] 4 kevent() error on 9 filter:-1, 1 0
-2021/07/05 19:30:45 [alert] 4 kevent() error on 11 filter:-1, 1 0
-2021/07/05 19:34:14 [alert] 1 kevent() error on 7 filter:-1
-2021/07/05 19:34:14 [alert] 1 kevent() error on 8 filter:-1
-2021/07/05 19:34:14 [alert] 1 kevent() error on 9 filter:-1
-2021/07/05 19:34:14 [alert] 1 kevent() error on 10 filter:-1
-2021/07/05 19:34:14 [alert] 1 kevent() error on 11 filter:-1
-2021/07/05 19:38:04 [alert] 3 kevent() reported about an closed connection 7
-2021/07/05 19:38:04 [alert] 1 kevent() error on 7 filter:-1
-2021/07/05 19:38:04 [alert] 4 kevent() reported about an closed connection 8
-2021/07/05 19:38:04 [alert] 4 kevent() reported about an closed connection 9
-2021/07/05 19:38:04 [alert] 4 kevent() reported about an closed connection 10
-2021/07/05 19:38:04 [alert] 3 kevent() error on 8 filter:-1
-2021/07/05 19:38:04 [alert] 3 kevent() error on 9 filter:-1
-2021/07/05 19:38:04 [alert] 3 kevent() error on 10 filter:-1
-2021/07/05 19:38:04 [alert] 1 kevent() reported about an closed connection 11
-2021/07/05 19:38:04 [alert] 1 kevent() error on 11 filter:-1
-
-2021/07/05 19:38:11 [alert] 1 kevent() reported about an closed connection 7
-2021/07/05 19:38:11 [alert] 1 kevent() error on 7 filter:-1
-2021/07/05 19:38:11 [alert] 4 kevent() reported about an closed connection 8
-2021/07/05 19:38:11 [alert] 4 kevent() reported about an closed connection 9
-2021/07/05 19:38:11 [alert] 4 kevent() reported about an closed connection 10
-2021/07/05 19:38:11 [alert] 4 kevent() reported about an closed connection 11
-2021/07/05 19:38:11 [alert] 4 kevent() error on 8 filter:-1
-2021/07/05 19:38:11 [alert] 4 kevent() error on 9 filter:-1
-2021/07/05 19:38:11 [alert] 4 kevent() error on 10 filter:-1
-2021/07/05 19:38:11 [alert] 4 kevent() error on 11 filter:-1
-
-
-2021/07/06 17:46:24 [alert] 1 kevent() reported about an closed connection 7
-2021/07/06 17:46:24 [alert] 1 kevent() error on 7 filter:-1
-2021/07/06 17:46:24 [alert] 1 kevent() reported about an closed connection 8
-2021/07/06 17:46:24 [alert] 1 kevent() error on 8 filter:-1
-2021/07/06 17:46:24 [alert] 1 kevent() reported about an closed connection 7
-2021/07/06 17:46:24 [alert] 1 kevent() error on 7 filter:-1
-2021/07/06 17:46:24 [alert] 2 kevent() reported about an closed connection 7
-2021/07/06 17:46:24 [alert] 2 kevent() reported about an closed connection 8
-2021/07/06 17:46:24 [alert] 2 kevent() error on 7 filter:-1
-2021/07/06 17:46:24 [alert] 2 kevent() error on 8 filter:-1
+2021/07/06 20:37:52 [emerge] bind() to  failed
+2021/07/06 20:38:15 [emerge] bind() to  failed
+2021/07/06 20:43:45 [emerge] bind() to : failed
+2021/07/06 20:44:04 [emerge] bind() to : failed
+2021/07/06 20:44:43 [emerge] bind() to : failed
+2021/07/06 20:45:14 [emerge] bind() to : failed
+2021/07/06 20:48:50 [emerge] bind() to : failed
+2021/07/06 20:49:46 [emerge] bind() to : failed
+2021/07/06 20:50:37 [emerge] bind() to : failed
+2021/07/06 20:50:52 [emerge] bind() to : failed
+2021/07/06 20:51:23 [emerge] bind() to : failed
+2021/07/06 20:55:49 [emerge] bind() to : failed

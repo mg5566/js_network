@@ -62,11 +62,17 @@ void	Connection::set_local_sockaddr(struct sockaddr_in *sa, socklen_t sl)
 	local_socklen = sl;
 	memcpy(&local_sockaddr, sa, sl);
 }
+void	Connection::set_httpconfig(HttpConfig *&hc)
+{
+	httpconfig = hc;
+}
 
 /* GETTER */
-bool		Connection::get_listen() const
+bool				Connection::get_listen() const
 { return listen; }
-void		*Connection::get_data() const
+void				*Connection::get_data() const
 { return data; }
-socket_t	Connection::get_fd() const
+socket_t			Connection::get_fd() const
 { return fd; }
+const HttpConfig	*Connection::get_httpconfig() const
+{ return httpconfig; }

@@ -100,6 +100,7 @@ int_t	Kqueue::kqueue_process_events(SocketManager *sm)
 				recv(event_list[i].ident, c->buffer, BUF_SIZE, 0);
 				event_handler.set_request_message(c->buffer);
 				event_handler.test_print_origin_message();
+				kqueue_add_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
 				// c->set_data(parsing된 request message);
 				// if (event_handler.set_request_message(c->buffer))
 				// c->buffer에 계속 append시키는데 '\0'왔으면
@@ -114,12 +115,10 @@ int_t	Kqueue::kqueue_process_events(SocketManager *sm)
 				// 	c->set_data(event_handler.parsing());
 				// 	kqueue_add_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
 				// }
-				kqueue_add_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
 			}
 		}
 		else if (event_list[i].filter == EVFILT_WRITE) {
 			//event_handler.process_event(c->get_data());
-
 			//std::string res_msg = event_handler.get_res_msg();
 			//send(event_list[i].ident, res_msg.c_str(), res_msg.size(), 0);
 			std::string temp = "HTTP/1.1 200 OK\r\nServer: jsnetwork\r\nContent-Length: 31\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n</html>\n";
@@ -129,9 +128,4 @@ int_t	Kqueue::kqueue_process_events(SocketManager *sm)
 		}
 	}
 	return WEBSERV_OK;
-
-
-	// std::string temp = "world!\n";
-	// std::string temp = "HTTP/1.1 200 OK\r\nServer: jsnetwork\r\nContent-Length: 31\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n</html>\n";
-			
 }

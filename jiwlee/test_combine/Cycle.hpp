@@ -4,6 +4,7 @@
 #include "webserv.hpp"
 #include "SocketManager.hpp"
 #include "Kqueue.hpp"
+#include "HttpConfig.hpp"
 
 class Cycle {
 private:
@@ -11,7 +12,7 @@ private:
 	Kqueue			*kq;
 
 public:
-	Cycle(std::multimap<in_port_t, in_addr_t> &addrs);
+	Cycle(HttpConfig *&httpconfig);
 	~Cycle();
 
 	void	webserv_cycle();

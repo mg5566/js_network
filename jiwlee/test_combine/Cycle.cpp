@@ -1,19 +1,20 @@
 #include "Cycle.hpp"
 
-Cycle::Cycle(std::multimap<in_port_t, in_addr_t> &addrs, httpconfig) {
-	kq = new Kqueue();
-	sm = new SocketManager(addrs, kq, httpconfig);
+Cycle::Cycle(HttpConfig *&httpconfig) {
 	logger = new Logger();
+	kq = new Kqueue();
+	sm = new SocketManager(httpconfig, kq);
 }
 
 Cycle::~Cycle() {
+	delete logger;
 	delete kq;
 	delete sm;
 }
 
-void	Cycle::webserv_cycle(httpconfig) {
+void	Cycle::webserv_cycle() {
 	for ( ;; ) {
-		if (kq->kqueue_process_events(sm, httpconfig) == WEBSERV_ERROR)
+		if (kq->kqueue_process_events(sm) == WEBSERV_ERROR)
 			break ;
 	}
 }

@@ -10,12 +10,20 @@ Listening::Listening(in_port_t port, in_addr_t ipaddr)
 	socklen = sizeof(sockaddr);
 
 	u_char	*p = (u_char *)&sockaddr.sin_addr;
-	addr_text += p[0];
-	addr_text += p[1];
-	addr_text += p[2];
-	addr_text += p[3];
+	std::cout << "check p: " << p[0] << std::endl;
+	std::cout << "check p: " << p[1] << std::endl;
+	std::cout << "check p: " << p[2] << std::endl;
+	std::cout << "check p: " << p[3] << std::endl;
+	// addr_text += p[0];
+	// addr_text += ".";
+	// addr_text += p[1];
+	// addr_text += ".";
+	// addr_text += p[2];
+	// addr_text += ".";
+	// addr_text += p[3];
 	addr_text += ":";
-	addr_text += ntohs(sockaddr.sin_port);
+	// addr_text += ntohs(sockaddr.sin_port);
+	std::cout << addr_text << std::endl;
 }
 
 Listening::~Listening() {}
@@ -24,11 +32,16 @@ int_t	Listening::open_listening_socket(SocketManager *sm) {
 	socket_t	s;
 
 	s = socket(sockaddr.sin_family, type, 0);
-	std::cout << "listening socket open" << s << std::endl;
 	if (s < 0) {
 		logger->log_error(LOG_EMERG, "socket() %s failed", addr_text.c_str());
 		return WEBSERV_ERROR;
 	}
+
+	int sock_optval = 1;
+	if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &sock_optval, sizeof(sock_optval)) == -1) {
+		logger->log_error(LOG_EMERG, "setsockopt() to %s failed", addr_text.c_str());
+	}
+
 	if (nonblocking(s) == -1) {
 		logger->log_error(LOG_EMERG, "fcntl(O_NONBLOCK) %s failed", addr_text.c_str());
 		if (close_socket(s) == -1) {
@@ -63,6 +76,8 @@ int_t	Listening::open_listening_socket(SocketManager *sm) {
 	c->set_sockaddr(&sockaddr, socklen);
 	c->set_local_sockaddr(&sockaddr, socklen);
 	connection = c;
+
+	std::cout << "listening socket open " << s << std::endl;
 	return WEBSERV_OK;
 }
 

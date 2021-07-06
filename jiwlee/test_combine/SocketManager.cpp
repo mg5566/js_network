@@ -1,8 +1,8 @@
 #include "SocketManager.hpp"
 
-SocketManager::SocketManager(std::multimap<in_port_t, in_addr_t> &addrs, Kqueue* &kq)
+SocketManager::SocketManager(HttpConfig *&httpconfig, Kqueue *&kq)
 {
-	init_socket_manager(addrs);
+	init_socket_manager(httpconfig);
 	open_listening_sockets(kq);
 }
 
@@ -12,9 +12,10 @@ SocketManager::~SocketManager()
 	delete[] connections;
 }
 
-void	SocketManager::init_socket_manager(std::multimap<in_port_t, in_addr_t> &addrs)
+void	SocketManager::init_socket_manager(HttpConfig *&httpconfig)
 {
 	// listening socket들 할당
+	std::multimap<in_port_t, in_addr_t> addrs = httpconfig->getMustListens();
 	for(std::multimap<in_port_t, in_addr_t>::iterator it = addrs.begin(); it != addrs.end(); ++it) {
 		Listening *ls = new Listening(it->first, it->second);
 		listening.push_back(ls);
@@ -28,7 +29,7 @@ void	SocketManager::init_socket_manager(std::multimap<in_port_t, in_addr_t> &add
 	for (int_t i = connection_n - 1; i >= 0; --i) {
 		c[i].set_data(next);
 		c[i].set_fd(-1);
-		c[i]. = httpconfig;
+		c[i].set_httpconfig(httpconfig);
 		next = &c[i];
 	}
 	free_connections = next;

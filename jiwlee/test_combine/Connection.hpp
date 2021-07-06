@@ -3,6 +3,7 @@
 
 #include "webserv.hpp"
 #include "Listening.hpp"
+#include "HttpConfig.hpp"
 
 class Connection {
 private:
@@ -19,6 +20,8 @@ private:
 	struct sockaddr_in	local_sockaddr;	// local_sockaddr.sin_port == 5000
 	socklen_t			local_socklen;
 
+	HttpConfig			*httpconfig;
+
 public:
 	char				buffer[BUF_SIZE];
 
@@ -34,11 +37,13 @@ public:
 	void	set_listening(Listening *_listening);
 	void	set_sockaddr(struct sockaddr_in *sa, socklen_t sl);
 	void	set_local_sockaddr(struct sockaddr_in *sa, socklen_t sl);
+	void	set_httpconfig(HttpConfig *&hc);
 
-	bool		get_listen() const;
-	void		*get_data() const;
-	socket_t	get_fd() const;
-	//	get_local_sockaddr() const;
+	bool				get_listen() const;
+	void				*get_data() const;
+	socket_t			get_fd() const;
+	struct sockadddr_in	get_local_sockaddr() const;
+	const HttpConfig	*get_httpconfig() const;
 };
 
 
