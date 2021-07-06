@@ -5,6 +5,8 @@ Logger		*logger;
 
 int main(void)
 {
+	// HttpConfig *httpconfig;
+
 	std::multimap<in_port_t, in_addr_t>	addrs;
 	std::pair<in_port_t, in_addr_t>	addr_80(80, INADDR_ANY);
 	std::pair<in_port_t, in_addr_t>	addr_5000(5000, INADDR_ANY);
@@ -15,6 +17,8 @@ int main(void)
 	addrs.insert(addr_8080);
 
 	// config parsing
-	Cycle cycle(addrs);
+	Cycle cycle(addrs, httpconfig);
+
+	cycle.webserv_cycle();
 	return (0);
 }

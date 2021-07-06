@@ -55,3 +55,15 @@
 2021/07/05 19:38:11 [alert] 4 kevent() error on 9 filter:-1
 2021/07/05 19:38:11 [alert] 4 kevent() error on 10 filter:-1
 2021/07/05 19:38:11 [alert] 4 kevent() error on 11 filter:-1
+
+
+2021/07/06 17:46:24 [alert] 1 kevent() reported about an closed connection 7
+2021/07/06 17:46:24 [alert] 1 kevent() error on 7 filter:-1
+2021/07/06 17:46:24 [alert] 1 kevent() reported about an closed connection 8
+2021/07/06 17:46:24 [alert] 1 kevent() error on 8 filter:-1
+2021/07/06 17:46:24 [alert] 1 kevent() reported about an closed connection 7
+2021/07/06 17:46:24 [alert] 1 kevent() error on 7 filter:-1
+2021/07/06 17:46:24 [alert] 2 kevent() reported about an closed connection 7
+2021/07/06 17:46:24 [alert] 2 kevent() reported about an closed connection 8
+2021/07/06 17:46:24 [alert] 2 kevent() error on 7 filter:-1
+2021/07/06 17:46:24 [alert] 2 kevent() error on 8 filter:-1

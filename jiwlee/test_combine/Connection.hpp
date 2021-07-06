@@ -12,11 +12,11 @@ private:
 
 	socket_t			fd;
 	int					type;
-	struct sockaddr_in	sockaddr;
+	struct sockaddr_in	sockaddr;		// client의 port랑 ip
 	socklen_t			socklen;
 
 	Listening			*listening;
-	struct sockaddr_in	local_sockaddr;
+	struct sockaddr_in	local_sockaddr;	// local_sockaddr.sin_port == 5000
 	socklen_t			local_socklen;
 
 public:
@@ -38,6 +38,7 @@ public:
 	bool		get_listen() const;
 	void		*get_data() const;
 	socket_t	get_fd() const;
+	//	get_local_sockaddr() const;
 };
 
 

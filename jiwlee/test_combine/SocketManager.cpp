@@ -28,6 +28,7 @@ void	SocketManager::init_socket_manager(std::multimap<in_port_t, in_addr_t> &add
 	for (int_t i = connection_n - 1; i >= 0; --i) {
 		c[i].set_data(next);
 		c[i].set_fd(-1);
+		c[i]. = httpconfig;
 		next = &c[i];
 	}
 	free_connections = next;
