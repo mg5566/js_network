@@ -12,8 +12,8 @@ int main(void) {
     // 1번째 입력
     // std::cin >> input;
     getline(std::cin, input);
-    // event_handler.set_request_message(input.c_str());
-    event_handler.process_event(input.c_str());
+    event_handler.set_request_message(input.c_str());
+    event_handler.process_event();
     event_handler.test_print_origin_message();
     event_handler.test_print_request_message();
 
@@ -21,8 +21,8 @@ int main(void) {
     input.clear();
     //std::cin >> input;
     getline(std::cin, input);
-    // event_handler.set_request_message(input.c_str());
-    event_handler.process_event(input.c_str());
+    event_handler.set_request_message(input.c_str());
+    event_handler.process_event();
     event_handler.test_print_origin_message();
     event_handler.test_print_request_message();
     return (0);
