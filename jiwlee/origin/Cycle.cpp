@@ -1,9 +1,9 @@
 #include "Cycle.hpp"
 
 Cycle::Cycle(std::multimap<in_port_t, in_addr_t> &addrs) {
+	logger = new Logger();
 	kq = new Kqueue();
 	sm = new SocketManager(addrs, kq);
-	logger = new Logger();
 
 	webserv_cycle();
 }
