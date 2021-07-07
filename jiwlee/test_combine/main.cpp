@@ -13,6 +13,7 @@ int main(void)
 	}
 	catch(std::exception &e) {
 		std::cerr << e.what() << std::endl;
+		return (-1);
 	}
 	cycle.webserv_cycle();
 	return (0);
