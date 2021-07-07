@@ -9,33 +9,24 @@ Listening::Listening(in_port_t port, in_addr_t ipaddr)
 
 	socklen = sizeof(sockaddr);
 
-	u_char	*p = (u_char *)&sockaddr.sin_addr;
-	std::cout << "check p: " << p[0] << std::endl;
-	std::cout << "check p: " << p[1] << std::endl;
-	std::cout << "check p: " << p[2] << std::endl;
-	std::cout << "check p: " << p[3] << std::endl;
-	// addr_text += p[0];
-	// addr_text += ".";
-	// addr_text += p[1];
-	// addr_text += ".";
-	// addr_text += p[2];
-	// addr_text += ".";
-	// addr_text += p[3];
-	addr_text += ":";
+	// u_char	*p = (u_char *)&sockaddr.sin_addr;
 	// addr_text += ntohs(sockaddr.sin_port);
-	std::cout << addr_text << std::endl;
+	// setting해야함
+	addr_text = "";
 }
 
 Listening::~Listening() {}
 
-int_t	Listening::open_listening_socket(SocketManager *sm) {
+void	Listening::open_listening_socket(SocketManager *sm) {
 	socket_t	s;
 
 	s = socket(sockaddr.sin_family, type, 0);
 	if (s < 0) {
 		logger->log_error(LOG_EMERG, "socket() %s failed", addr_text.c_str());
-		return WEBSERV_ERROR;
+		throw socketException();
 	}
+	
+	fd = s;
 
 	int sock_optval = 1;
 	if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &sock_optval, sizeof(sock_optval)) == -1) {
@@ -46,8 +37,9 @@ int_t	Listening::open_listening_socket(SocketManager *sm) {
 		logger->log_error(LOG_EMERG, "fcntl(O_NONBLOCK) %s failed", addr_text.c_str());
 		if (close_socket(s) == -1) {
 			logger->log_error(LOG_EMERG, "close() socket %s failed", addr_text.c_str());
+			throw closeSocketException();
 		}
-		return WEBSERV_ERROR;
+		throw nonblockingException();
 	}
 
 
@@ -55,21 +47,21 @@ int_t	Listening::open_listening_socket(SocketManager *sm) {
 		logger->log_error(LOG_EMERG, "bind() to %s failed", addr_text.c_str());
 		if (close_socket(s) == -1) {
 			logger->log_error(LOG_EMERG, "close() socket %s failed", addr_text.c_str());
+			throw closeSocketException();
 		}
-		return WEBSERV_CONTINUE;
+		throw bindException();
 	}
 
 	if (listen(s, backlog) == -1) {
 		logger->log_error(LOG_EMERG, "listen() to %s failed", addr_text.c_str());
 		if (close_socket(s) == -1) {
 			logger->log_error(LOG_EMERG, "close() socket %s failed", addr_text.c_str());
+			throw closeSocketException();
 		}
-		return WEBSERV_CONTINUE;
+		throw listenException();
 	}
 
-	fd = s;
-
-	Connection *c = sm->get_connection(fd);	// listening socket을 Connection에 넣음
+	Connection *c = sm->get_connection(fd);
 	c->set_listen(true);
 	c->set_type(type);
 	c->set_listening(this);
@@ -77,8 +69,8 @@ int_t	Listening::open_listening_socket(SocketManager *sm) {
 	c->set_local_sockaddr(&sockaddr, socklen);
 	connection = c;
 
+	///////////지워야함
 	std::cout << "listening socket open " << s << std::endl;
-	return WEBSERV_OK;
 }
 
 void		Listening::set_listening_connection(Connection *c) {

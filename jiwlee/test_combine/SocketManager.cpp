@@ -1,10 +1,7 @@
 #include "SocketManager.hpp"
 
-SocketManager::SocketManager(HttpConfig *&httpconfig, Kqueue *&kq)
-{
-	init_socket_manager(httpconfig);
-	open_listening_sockets(kq);
-}
+SocketManager::SocketManager()
+{}
 
 SocketManager::~SocketManager()
 {
@@ -20,10 +17,10 @@ void	SocketManager::init_socket_manager(HttpConfig *&httpconfig)
 		Listening *ls = new Listening(it->first, it->second);
 		listening.push_back(ls);
 	}
+
 	//connection socket들 할당
 	connection_n = DEFAULT_CONNECTIONS;
 	connections = new Connection[connection_n]();
-
 	Connection *c = connections;
 	Connection *next = NULL;
 	for (int_t i = connection_n - 1; i >= 0; --i) {
@@ -36,13 +33,17 @@ void	SocketManager::init_socket_manager(HttpConfig *&httpconfig)
 	free_connection_n = connection_n;
 }
 
-int		SocketManager::open_listening_sockets(Kqueue* &kq) {
+void	SocketManager::open_listening_sockets(Kqueue* &kq) {
 	for (size_t i = 0; i < listening.size(); ++i) {
-		if (listening[i]->open_listening_socket(this) == WEBSERV_ERROR)	// socket, nonblocking, bind, listen
-			return WEBSERV_ERROR;
-		kq->kqueue_add_event(listening[i]->get_listening_connection(), EVFILT_READ, EV_ADD);	// kqueue에 등록
+		try {
+			listening[i]->open_listening_socket(this);
+			kq->kqueue_set_event(listening[i]->get_listening_connection(), EVFILT_READ, EV_ADD);
+		}
+		catch(std::exception &e) {
+			std::cerr << "SocketManager::open_listening_sockets(fd = " << listening[i]->get_fd() << ")" 
+						<< e.what() << std::endl;
+		}
 	}
-	return WEBSERV_OK;
 }
 
 void	SocketManager::close_listening_sockets() {
@@ -57,6 +58,7 @@ void	SocketManager::close_listening_sockets() {
 		}
 		if (close_socket(ls->get_fd()) == -1) {
 			logger->log_error(LOG_EMERG, "close() socket %s failed", ls->get_addr_text().c_str());
+			throw closeSocketException();
 		}
 		delete ls;
 	}
@@ -69,12 +71,11 @@ Connection*		SocketManager::get_connection(socket_t s) {
 	c = free_connections;
 	if (c == NULL) {
 		logger->log_error(LOG_ALERT, "%u worker_connections are not enough", connection_n);
-		return NULL;
+		throw connNotEnoughException();
 	}
 	free_connections = (Connection*)c->get_data();
 	--free_connection_n;
 	c->set_fd(s);
-
 	return c;
 }
 
@@ -92,6 +93,7 @@ void	SocketManager::close_connection(Connection *c) {
 	c->set_fd(-1);
 	if (close_socket(fd) == -1) {
 		logger->log_error(LOG_ALERT, "close() socket %d failed", fd);
+		throw closeSocketException();
 	}
 }
 

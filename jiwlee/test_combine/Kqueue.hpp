@@ -23,11 +23,10 @@ public:
 	Kqueue();
 	~Kqueue();
 
-	int_t	kqueue_init();
+	void	kqueue_init();
 	void	kqueue_done();
-	int		kqueue_add_event(Connection *c, u_short flags, u_int fflag);
-	int		kqueue_del_event(Connection *c, u_short flags, u_int fflag);
-	int_t	kqueue_process_events(SocketManager *sm);
+	void	kqueue_set_event(Connection *c, u_short filter, u_int flags);
+	void	kqueue_process_events(SocketManager *sm);
 };
 
 #endif

@@ -6,12 +6,14 @@ Logger		*logger;
 
 int main(void)
 {
-	HttpConfig *httpconfig = new HttpConfig();
-	
-	Cycle cycle(httpconfig);
-
+	Cycle cycle;
+	try {
+		HttpConfig *httpconfig = new HttpConfig();
+		cycle.init_cycle(httpconfig);
+	}
+	catch(std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
 	cycle.webserv_cycle();
-
-	delete httpconfig;
 	return (0);
 }

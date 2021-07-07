@@ -12,9 +12,10 @@ private:
 	Kqueue			*kq;
 
 public:
-	Cycle(HttpConfig *&httpconfig);
+	Cycle();
 	~Cycle();
 
+	void	init_cycle(HttpConfig *&httpconfig);
 	void	webserv_cycle();
 };
 

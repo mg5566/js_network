@@ -18,12 +18,12 @@ private:
 	size_t		free_connection_n;
 
 public:
-	SocketManager(HttpConfig *&httpconfig, Kqueue *&kq);
+	SocketManager();
 	~SocketManager();
 
 	void		init_socket_manager(HttpConfig *&httpconfig);
 
-	int			open_listening_sockets(Kqueue* &kq);
+	void		open_listening_sockets(Kqueue* &kq);
 	void		close_listening_sockets();
 
 	Connection*	get_connection(socket_t s);

@@ -1,48 +1,41 @@
 #include "Kqueue.hpp"
 
 Kqueue::Kqueue()
-: kq(-1), nchanges(0), nevents(0), change_list(NULL), event_list(NULL)
-{
-	kqueue_init();
-}
-
-Kqueue::~Kqueue()
-{
-	kqueue_done();
-}
-
-int_t	Kqueue::kqueue_init()
-{
+: kq(-1), nchanges(0), nevents(0), change_list(NULL), event_list(NULL) {
 	kcf.changes = 512;
 	kcf.events = 512;
 	ts.tv_sec = 5;
 	ts.tv_nsec = 0;
+}
 
+Kqueue::~Kqueue()
+{ kqueue_done(); }
+
+void	Kqueue::kqueue_init() {
 	if (kq == -1) {
 		kq = kqueue();
 		if (kq == -1) {
 			logger->log_error(LOG_EMERG, "kqueue() failed");
-			return WEBSERV_ERROR;
+			throw kqueueException();
 		}
 	}
 
 	change_list = new struct kevent[kcf.changes]();
 	if (change_list == NULL) {
 		logger->log_error(LOG_EMERG, "malloc(%u) failed", (size_t)kcf.changes);
-		return WEBSERV_ERROR;
+		throw std::bad_alloc();
 	}
 	event_list = new struct kevent[kcf.events]();
 	if (event_list == NULL) {
 		logger->log_error(LOG_EMERG, "malloc(%u) failed", (size_t)kcf.events);
-		return WEBSERV_ERROR;
+		throw std::bad_alloc();
 	}
 	max_changes = kcf.changes;
 	nevents = kcf.events;
-	return WEBSERV_OK;
 }
 
 void	Kqueue::kqueue_done() {
-	if (close(kq) == -1) {
+	if (close(kq) == -1) {	// throw ??
 		logger->log_error(LOG_ALERT, "kqueue close() failed");
 	}
 	kq = -1;
@@ -54,21 +47,13 @@ void	Kqueue::kqueue_done() {
 }
 
 // Connection 하나 등록
-int		Kqueue::kqueue_add_event(Connection *c, u_short flags, u_int fflag)
+void	Kqueue::kqueue_set_event(Connection *c, u_short filter, u_int flags)
 {
-	EV_SET(&change_list[nchanges], c->get_fd(), flags, fflag, 0, 0, c);	// udata = Connection
+	EV_SET(&change_list[nchanges], c->get_fd(), filter, flags, 0, 0, c);	// udata = Connection
 	++nchanges;
-	return WEBSERV_OK;
 }
 
-int		Kqueue::kqueue_del_event(Connection *c, u_short flags, u_int fflag)
-{
-	EV_SET(&change_list[nchanges], c->get_fd(), flags, fflag, 0, 0, c);
-	++nchanges;
-	return WEBSERV_OK;
-}
-
-int_t	Kqueue::kqueue_process_events(SocketManager *sm)
+void	Kqueue::kqueue_process_events(SocketManager *sm)
 {
 	int				events;
 	Event_Handler	event_handler;
@@ -77,7 +62,7 @@ int_t	Kqueue::kqueue_process_events(SocketManager *sm)
 	nchanges = 0;
 	if (events == -1) {
 		logger->log_error(LOG_ALERT, "kevent() failed");
-		return WEBSERV_ERROR;
+		throw keventException();
 	}
 	for (int_t i = 0; i < events; ++i) {
 		Connection *c = (Connection*)event_list[i].udata;
@@ -88,44 +73,26 @@ int_t	Kqueue::kqueue_process_events(SocketManager *sm)
 		}
 		if (event_list[i].flags & EV_EOF) {
 			logger->log_error(LOG_ALERT, "%d kevent() reported about an closed connection %d", events, (int)event_list[i].ident);
-			kqueue_del_event(c, EVFILT_READ, EV_DELETE);
-			sm->close_connection(c);
+			kqueue_set_event(c, EVFILT_READ, EV_DELETE);
+			sm->close_connection(c);	// throw
 		}
 		else if (event_list[i].filter == EVFILT_READ) {
 			if (c->get_listen()) {
-				Connection *conn = c->event_accept(sm);
-				kqueue_add_event(conn, EVFILT_READ, EV_ADD);
+				Connection *conn = c->event_accept(sm);	// throw
+				kqueue_set_event(conn, EVFILT_READ, EV_ADD);
 			}
 			else {
 				recv(event_list[i].ident, c->buffer, BUF_SIZE, 0);
 				event_handler.set_request_message(c->buffer);
 				event_handler.test_print_origin_message();
-				kqueue_add_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
-				// c->set_data(parsing된 request message);
-				// if (event_handler.set_request_message(c->buffer))
-				// c->buffer에 계속 append시키는데 '\0'왔으면
-				// if (!is_end(c->buffer))  // not end
-				// {
-				// 	event_handler.set_request_message(c->buffer);  // append
-				// }
-				// else	// end
-				// {
-				// 	// event_handler.parsing();
-				// 	// c->set_data(parsing된 request message);
-				// 	c->set_data(event_handler.parsing());
-				// 	kqueue_add_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
-				// }
+				kqueue_set_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
 			}
 		}
 		else if (event_list[i].filter == EVFILT_WRITE) {
-			//event_handler.process_event(c->get_data());
-			//std::string res_msg = event_handler.get_res_msg();
-			//send(event_list[i].ident, res_msg.c_str(), res_msg.size(), 0);
 			std::string temp = "HTTP/1.1 200 OK\r\nServer: jsnetwork\r\nContent-Length: 31\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n</html>\n";
 			send(event_list[i].ident, temp.c_str(), temp.size(), 0);
 			memset(c->buffer, 0, BUF_SIZE);
-			kqueue_add_event(c, EVFILT_READ, EV_ADD);
+			kqueue_set_event(c, EVFILT_READ, EV_ADD);
 		}
 	}
-	return WEBSERV_OK;
 }

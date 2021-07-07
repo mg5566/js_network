@@ -22,7 +22,7 @@ public:
 	Listening(in_port_t _port, in_addr_t _ipaddr);
 	~Listening();
 
-	int_t		open_listening_socket(SocketManager *sm);
+	void		open_listening_socket(SocketManager *sm);
 
 	void		set_listening_connection(Connection *c);
 
