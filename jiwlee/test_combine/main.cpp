@@ -2,8 +2,6 @@
 #include "HttpConfig.hpp"
 #include <map>
 
-Logger		*logger;
-
 int main(void)
 {
 	Cycle cycle;

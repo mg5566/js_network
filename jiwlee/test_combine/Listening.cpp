@@ -22,7 +22,7 @@ void	Listening::open_listening_socket(SocketManager *sm) {
 
 	s = socket(sockaddr.sin_family, type, 0);
 	if (s < 0) {
-		logger->log_error(LOG_EMERG, "socket() %s failed", addr_text.c_str());
+		Logger::log_error(LOG_EMERG, "socket() %s failed", addr_text.c_str());
 		throw socketException();
 	}
 	
@@ -30,13 +30,13 @@ void	Listening::open_listening_socket(SocketManager *sm) {
 
 	int sock_optval = 1;
 	if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &sock_optval, sizeof(sock_optval)) == -1) {
-		logger->log_error(LOG_EMERG, "setsockopt() to %s failed", addr_text.c_str());
+		Logger::log_error(LOG_EMERG, "setsockopt() to %s failed", addr_text.c_str());
 	}
 
 	if (nonblocking(s) == -1) {
-		logger->log_error(LOG_EMERG, "fcntl(O_NONBLOCK) %s failed", addr_text.c_str());
+		Logger::log_error(LOG_EMERG, "fcntl(O_NONBLOCK) %s failed", addr_text.c_str());
 		if (close_socket(s) == -1) {
-			logger->log_error(LOG_EMERG, "close() socket %s failed", addr_text.c_str());
+			Logger::log_error(LOG_EMERG, "close() socket %s failed", addr_text.c_str());
 			throw closeSocketException();
 		}
 		throw nonblockingException();
@@ -44,18 +44,18 @@ void	Listening::open_listening_socket(SocketManager *sm) {
 
 
 	if (bind(s, (struct sockaddr *)&sockaddr, socklen) == -1) {
-		logger->log_error(LOG_EMERG, "bind() to %s failed", addr_text.c_str());
+		Logger::log_error(LOG_EMERG, "bind() to %s failed", addr_text.c_str());
 		if (close_socket(s) == -1) {
-			logger->log_error(LOG_EMERG, "close() socket %s failed", addr_text.c_str());
+			Logger::log_error(LOG_EMERG, "close() socket %s failed", addr_text.c_str());
 			throw closeSocketException();
 		}
 		throw bindException();
 	}
 
 	if (listen(s, backlog) == -1) {
-		logger->log_error(LOG_EMERG, "listen() to %s failed", addr_text.c_str());
+		Logger::log_error(LOG_EMERG, "listen() to %s failed", addr_text.c_str());
 		if (close_socket(s) == -1) {
-			logger->log_error(LOG_EMERG, "close() socket %s failed", addr_text.c_str());
+			Logger::log_error(LOG_EMERG, "close() socket %s failed", addr_text.c_str());
 			throw closeSocketException();
 		}
 		throw listenException();

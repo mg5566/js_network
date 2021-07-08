@@ -1,13 +1,16 @@
 #include "Cycle.hpp"
 
 Cycle::Cycle() {
-	logger = new Logger();
+	std::ofstream ofs;
+	ofs.open("error.log", std::ofstream::out | std::ios_base::app);
+	if (!ofs.is_open())
+		throw fileOpenException();
+	ofs.close();
 	kq = new Kqueue();
 	sm = new SocketManager();
 }
 
 Cycle::~Cycle() {
-	delete logger;
 	delete kq;
 	delete sm;
 }

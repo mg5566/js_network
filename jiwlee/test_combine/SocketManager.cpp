@@ -57,7 +57,7 @@ void	SocketManager::close_listening_sockets() {
 			ls->set_listening_connection(NULL);
 		}
 		if (close_socket(ls->get_fd()) == -1) {
-			logger->log_error(LOG_EMERG, "close() socket %s failed", ls->get_addr_text().c_str());
+			Logger::log_error(LOG_EMERG, "close() socket %s failed", ls->get_addr_text().c_str());
 			throw closeSocketException();
 		}
 		delete ls;
@@ -70,7 +70,7 @@ Connection*		SocketManager::get_connection(socket_t s) {
 
 	c = free_connections;
 	if (c == NULL) {
-		logger->log_error(LOG_ALERT, "%u worker_connections are not enough", connection_n);
+		Logger::log_error(LOG_ALERT, "%u worker_connections are not enough", connection_n);
 		throw connNotEnoughException();
 	}
 	free_connections = (Connection*)c->get_data();
@@ -92,7 +92,7 @@ void	SocketManager::close_connection(Connection *c) {
 	fd = c->get_fd();
 	c->set_fd(-1);
 	if (close_socket(fd) == -1) {
-		logger->log_error(LOG_ALERT, "close() socket %d failed", fd);
+		Logger::log_error(LOG_ALERT, "close() socket %d failed", fd);
 		throw closeSocketException();
 	}
 }

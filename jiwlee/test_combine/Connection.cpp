@@ -16,7 +16,7 @@ Connection	*Connection::event_accept(SocketManager *sm) {
 	socket_t s = accept(fd, (struct sockaddr *)&conn_sockaddr, &conn_socklen);
 	
 	if (s == -1) {
-		logger->log_error(LOG_ALERT, "accept() failed");
+		Logger::log_error(LOG_ALERT, "accept() failed");
 		throw acceptExcception();
 	}
 
@@ -24,13 +24,13 @@ Connection	*Connection::event_accept(SocketManager *sm) {
 
 	if (c == NULL) {	// free_connection 없음
 		if (close_socket(s) == -1) {
-			logger->log_error(LOG_ALERT, "close() socket failed");
+			Logger::log_error(LOG_ALERT, "close() socket failed");
 			throw closeSocketException();
 		}
 		throw connNotEnoughException();
 	}
 	if (nonblocking(s) == -1) {
-		logger->log_error(LOG_ALERT, "fcntl(O_NONBLOCK) failed");
+		Logger::log_error(LOG_ALERT, "fcntl(O_NONBLOCK) failed");
 		sm->close_connection(c);	// s가 close됨
 		throw nonblockingException();
 	}

@@ -15,19 +15,19 @@ void	Kqueue::kqueue_init() {
 	if (kq == -1) {
 		kq = kqueue();
 		if (kq == -1) {
-			logger->log_error(LOG_EMERG, "kqueue() failed");
+			Logger::log_error(LOG_EMERG, "kqueue() failed");
 			throw kqueueException();
 		}
 	}
 
 	change_list = new struct kevent[kcf.changes]();
 	if (change_list == NULL) {
-		logger->log_error(LOG_EMERG, "malloc(%u) failed", (size_t)kcf.changes);
+		Logger::log_error(LOG_EMERG, "malloc(%u) failed", (size_t)kcf.changes);
 		throw std::bad_alloc();
 	}
 	event_list = new struct kevent[kcf.events]();
 	if (event_list == NULL) {
-		logger->log_error(LOG_EMERG, "malloc(%u) failed", (size_t)kcf.events);
+		Logger::log_error(LOG_EMERG, "malloc(%u) failed", (size_t)kcf.events);
 		throw std::bad_alloc();
 	}
 	max_changes = kcf.changes;
@@ -36,7 +36,7 @@ void	Kqueue::kqueue_init() {
 
 void	Kqueue::kqueue_done() {
 	if (close(kq) == -1) {	// throw ??
-		logger->log_error(LOG_ALERT, "kqueue close() failed");
+		Logger::log_error(LOG_ALERT, "kqueue close() failed");
 	}
 	kq = -1;
 	delete[] change_list;
@@ -61,18 +61,18 @@ void	Kqueue::kqueue_process_events(SocketManager *sm)
 	events = kevent(kq, change_list, nchanges, event_list, nevents, &ts);
 	nchanges = 0;
 	if (events == -1) {
-		logger->log_error(LOG_ALERT, "kevent() failed");
+		Logger::log_error(LOG_ALERT, "kevent() failed");
 		throw keventException();
 	}
 	for (int_t i = 0; i < events; ++i) {
 		Connection *c = (Connection*)event_list[i].udata;
 
 		if (event_list[i].flags & EV_ERROR) {
-			logger->log_error(LOG_ALERT, "%d kevent() error on %d filter:%d", events, (int)event_list[i].ident, (int)event_list[i].filter);
+			Logger::log_error(LOG_ALERT, "%d kevent() error on %d filter:%d", events, (int)event_list[i].ident, (int)event_list[i].filter);
 			continue ;
 		}
 		if (event_list[i].flags & EV_EOF) {
-			logger->log_error(LOG_ALERT, "%d kevent() reported about an closed connection %d", events, (int)event_list[i].ident);
+			Logger::log_error(LOG_ALERT, "%d kevent() reported about an closed connection %d", events, (int)event_list[i].ident);
 			kqueue_set_event(c, EVFILT_READ, EV_DELETE);
 			sm->close_connection(c);	// throw
 		}

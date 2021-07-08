@@ -6,20 +6,21 @@
 #include <sys/time.h>
 
 class Time {
-private:
-	struct timeval	tv;
-	time_t			sec;
-
-	std::string		data;
-
 public:
-	Time();
-	~Time();
+	static	std::string		get_current_time()
+	{
+		struct timeval		tv;
+		time_t				sec;
+		std::stringstream	ss;
+		char				buf[20];
 
-	void	set_time();
-	void	webserv_localtime(time_t s, struct tm *time);
+		gettimeofday(&tv, NULL);
+		sec = tv.tv_sec;
+		strftime(buf, sizeof(buf), "%Y/%m/%d %H:%M:%S", localtime(&sec));
+		ss << buf;
+		return ss.str();
+	}
 
-	const std::string	&get_time_data() const;
 };
 
 #endif
