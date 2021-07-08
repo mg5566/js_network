@@ -9,7 +9,8 @@ Event_Handler::~Event_Handler() {}
 
 // 아마도 EVFILT_READ 에서 set request message 를 계속 호출할 것으로 예상합니다.
 // void Event_Handler::set_request_message(const char *buf) {
-bool Event_Handler::set_request_message(const char *buf) {
+// bool Event_Handler::set_request_message(const char *buf) {
+bool Event_Handler::append_buffer_to_request_message(const char *buf) {
   // origin_message.clear();
   // telnet 에서는 1개의 message 가 분할되어 올 수 있습니다. 따라서 계속 이어붙입니다.
   
@@ -25,7 +26,8 @@ void Event_Handler::parse_req_msg() {
   parser.run_parsing(request_message, origin_message);
 }
 
-void Event_Handler::process_event() {
+// void Event_Handler::process_event(std::string response_message, Request_Message &req_mes, HttpConfig *httpconfig) {
+void Event_Handler::process_event(std::string response_message, Request_Message &req_mes, HttpConfig *httpconfig, struct sockadddr_in local_sockaddr_in) {
   // 일단 밖으로 뺏습니다. 아닐 경우 다시 살리세요.
   // 다시 살리면 set_request_message() 에선 clear 를 먼저 해야합니다.
   // 0. client 에게 message 받기
@@ -46,7 +48,14 @@ void Event_Handler::process_event() {
     // 1. 그 외 동작
 
   // 3. response message 생성
-  // generator.gen_res_msg();
+  // void gen_res_msg(std::string &res_msg, std::map<std::string, std::vector<std::string> > &header_map, std::string &file_name);
+  // generator.gen_res_msg(response_message, req_mes.header_map, req_mes.start_line_map["URL"]);
+  LocationConfig *la = httpconfig->getLocationConfig(local_sockaddr_in.);
+  generator.set_start_line(response_message);
+  generator.set_headers(response_message, req_mes.header_map);
+  std::string file_name = "text.txt";
+  generator.set_entity_body(response_message, file_name); 
+
 }
 
 Request_Message &Event_Handler::get_req_msg() {
