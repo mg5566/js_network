@@ -24,7 +24,7 @@ void	SocketManager::init_socket_manager(HttpConfig *&httpconfig)
 	Connection *c = connections;
 	Connection *next = NULL;
 	for (int_t i = connection_n - 1; i >= 0; --i) {
-		c[i].set_data(next);
+		c[i].set_next(next);
 		c[i].set_fd(-1);
 		c[i].set_httpconfig(httpconfig);
 		next = &c[i];
@@ -73,14 +73,14 @@ Connection*		SocketManager::get_connection(socket_t s) {
 		Logger::log_error(LOG_ALERT, "%u worker_connections are not enough", connection_n);
 		throw connNotEnoughException();
 	}
-	free_connections = (Connection*)c->get_data();
+	free_connections = c->get_next();
 	--free_connection_n;
 	c->set_fd(s);
 	return c;
 }
 
 void	SocketManager::free_connection(Connection *c) {
-	c->set_data(free_connections);
+	c->set_next(free_connections);
 	free_connections = c;
 	++free_connection_n;
 }

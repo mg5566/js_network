@@ -84,22 +84,29 @@ void	Kqueue::kqueue_process_events(SocketManager *sm)
 			}
 			else {
 				recv_len = recv(event_list[i].ident, c->buffer, BUF_SIZE, 0);
-				event_handler.test_print_origin_message();
-				kqueue_set_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
-				/*
+				// event_handler.set_request_message(c->buffer);
+				// event_handler.test_print_origin_message();
+				// kqueue_set_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
+				
 				// buffer 이어붙이는 기능		
 				if (event_handler.set_request_message(c->buffer))
 				{
+					event_handler.parse_req_msg();
+					// c->set_data(event_handler.get_req_msg());
+					c->set_request_message(event_handler.get_req_msg());
 					event_handler.test_print_origin_message();
 					kqueue_set_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
 				}
-				*/
+				
 				memset(c->buffer, 0, recv_len);
 			}
 		}
 		else if (event_list[i].filter == EVFILT_WRITE) {
-			std::string temp = "HTTP/1.1 200 OK\r\nServer: jsnetwork\r\nContent-Length: 31\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n</html>\n";
-			send(event_list[i].ident, temp.c_str(), temp.size(), 0);
+			// c->get_data();
+			// generator response message
+			// std::string res_msg = event_handler.(c->get_request_msg());
+			std::string res_msg = "HTTP/1.1 200 OK\r\nServer: jsnetwork\r\nContent-Length: 31\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n</html>\n";
+			send(event_list[i].ident, res_msg.c_str(), res_msg.size(), 0);
 			kqueue_set_event(c, EVFILT_READ, EV_ADD);
 		}
 	}

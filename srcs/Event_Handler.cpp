@@ -8,10 +8,17 @@ Event_Handler::Event_Handler() {}
 Event_Handler::~Event_Handler() {}
 
 // 아마도 EVFILT_READ 에서 set request message 를 계속 호출할 것으로 예상합니다.
-void Event_Handler::set_request_message(const char *buf) {
+// void Event_Handler::set_request_message(const char *buf) {
+bool Event_Handler::set_request_message(const char *buf) {
   // origin_message.clear();
   // telnet 에서는 1개의 message 가 분할되어 올 수 있습니다. 따라서 계속 이어붙입니다.
+  
+  // strlen 으로 조건을 확인하면 안된다.
+  std::cout << "strlen : " << strlen(buf) << std::endl;
+  if (strlen(buf) == 2)
+    return (true);
   origin_message += buf;
+  return (false);
 }
 
 void Event_Handler::parse_req_msg() {
@@ -42,7 +49,7 @@ void Event_Handler::process_event() {
   // generator.gen_res_msg();
 }
 
-Request_Message Event_Handler::get_req_msg() {
+Request_Message &Event_Handler::get_req_msg() {
   return (request_message);
 }
 

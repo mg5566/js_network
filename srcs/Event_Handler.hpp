@@ -26,7 +26,8 @@ class Event_Handler {
 
     // set req msg
     // void set_request_message(char *buf);
-    void set_request_message(const char *buf);
+    // void set_request_message(const char *buf);
+    bool set_request_message(const char *buf);
 
     // set nginx config
     // void set_http_config(HttpConfig &config);
@@ -39,7 +40,7 @@ class Event_Handler {
     // 발생된 event 를 처리합니다.
     void process_event();
 
-    Request_Message get_req_msg();
+    Request_Message &get_req_msg();
 
     /* test
     ** test 와 debug 를 위해서 print 를 하는 함수들을 작성할 예정입니다.

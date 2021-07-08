@@ -4,12 +4,11 @@
 #include "webserv.hpp"
 #include "Listening.hpp"
 #include "HttpConfig.hpp"
+#include "Request_Message.hpp"
 
 class Connection {
 private:
 	bool				listen;
-
-	void				*data;
 
 	socket_t			fd;
 	int					type;
@@ -22,6 +21,9 @@ private:
 
 	HttpConfig			*httpconfig;
 
+	Request_Message		req_msg;
+	Connection			*next;
+
 public:
 	char				buffer[BUF_SIZE];
 
@@ -31,19 +33,21 @@ public:
 	Connection	*event_accept(SocketManager *sv);
 
 	void	set_listen(bool _listen);
-	void	set_data(void *_data);
+	void	set_next(Connection *_next);
 	void	set_fd(socket_t _fd);
 	void	set_type(int _type);
 	void	set_listening(Listening *_listening);
 	void	set_sockaddr(struct sockaddr_in *sa, socklen_t sl);
 	void	set_local_sockaddr(struct sockaddr_in *sa, socklen_t sl);
 	void	set_httpconfig(HttpConfig *&hc);
+	void	set_request_message(Request_Message &req_msg);
 
 	bool				get_listen() const;
-	void				*get_data() const;
+	Connection			*get_next() const;
 	socket_t			get_fd() const;
 	struct sockadddr_in	get_local_sockaddr() const;
 	const HttpConfig	*get_httpconfig() const;
+	const Request_Message		&get_request_message() const;
 };
 
 

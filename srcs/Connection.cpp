@@ -45,8 +45,8 @@ Connection	*Connection::event_accept(SocketManager *sm) {
 /* SETTER */
 void	Connection::set_listen(bool _listen)
 { listen = _listen; }
-void	Connection::set_data(void *_data)
-{ data = _data; }
+void	Connection::set_next(Connection *_next)
+{ next = _next; }
 void	Connection::set_fd(socket_t _fd)
 { fd = _fd; }
 void	Connection::set_type(int _type)
@@ -67,13 +67,18 @@ void	Connection::set_httpconfig(HttpConfig *&hc)
 {
 	httpconfig = hc;
 }
+void	Connection::set_request_message(Request_Message &_req_msg) {
+	req_msg = _req_msg;
+}
 
 /* GETTER */
 bool				Connection::get_listen() const
 { return listen; }
-void				*Connection::get_data() const
-{ return data; }
+Connection			*Connection::get_next() const
+{ return next; }
 socket_t			Connection::get_fd() const
 { return fd; }
 const HttpConfig	*Connection::get_httpconfig() const
 { return httpconfig; }
+const Request_Message		&Connection::get_request_message() const
+{ return req_msg; }
