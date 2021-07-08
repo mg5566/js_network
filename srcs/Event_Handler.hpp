@@ -3,9 +3,12 @@
 
 #include <string>
 #include <iostream>  // for test print
+#include <sys/socket.h>  // struct sockaddr_in
 
 #include "Request_Message.hpp"
 #include "Request_Parser.hpp"
+#include "Response_Generator.hpp"
+#include "HttpConfig.hpp"
 
 class Event_Handler {
   private:
@@ -13,8 +16,8 @@ class Event_Handler {
     Request_Message     request_message;
     Request_Parser      parser;
     // 향후 구현 예정입니다.
-    // std::string         response_message;
-    // Response_Generator  generator;
+    std::string         response_message;
+    Response_Generator  generator;
 
     // 향후 nginx config 를 받을 변수
     // HttpConfig config;
@@ -26,8 +29,8 @@ class Event_Handler {
 
     // set req msg
     // void set_request_message(char *buf);
-    // void set_request_message(const char *buf);
-    bool set_request_message(const char *buf);
+    // bool set_request_message(const char *buf);
+    bool append_buffer_to_request_message(const char *buf);
 
     // set nginx config
     // void set_http_config(HttpConfig &config);
@@ -38,7 +41,8 @@ class Event_Handler {
     // get 혹은 post 를 위한 file open
 
     // 발생된 event 를 처리합니다.
-    void process_event();
+    // void process_event();
+    void process_event(std::string response_message, Request_Message &req_mes, HttpConfig *httpconfig, struct sockadddr_in local_sockaddr_in);
 
     Request_Message &get_req_msg();
 

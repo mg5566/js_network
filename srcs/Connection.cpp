@@ -78,7 +78,13 @@ Connection			*Connection::get_next() const
 { return next; }
 socket_t			Connection::get_fd() const
 { return fd; }
+/*
 const HttpConfig	*Connection::get_httpconfig() const
 { return httpconfig; }
 const Request_Message		&Connection::get_request_message() const
+{ return req_msg; }
+*/
+HttpConfig	*Connection::get_httpconfig()
+{ return httpconfig; }
+Request_Message		&Connection::get_request_message()
 { return req_msg; }
