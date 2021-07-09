@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>  // for test print
 #include <sys/socket.h>  // struct sockaddr_in
+#include <sys/types.h>  // struct sockaddr_in
 
 #include "Request_Message.hpp"
 #include "Request_Parser.hpp"
@@ -42,7 +43,8 @@ class Event_Handler {
 
     // 발생된 event 를 처리합니다.
     // void process_event();
-    void process_event(std::string response_message, Request_Message &req_mes, HttpConfig *httpconfig, struct sockadddr_in local_sockaddr_in);
+    // void process_event(std::string &response_message, Request_Message &req_mes, HttpConfig *httpconfig, struct sockaddr_in local_sockaddr_in);
+    void process_event(std::string &response_message, Request_Message &req_mes, struct sockaddr_in local_sockaddr_in);
 
     Request_Message &get_req_msg();
 

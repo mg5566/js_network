@@ -14,7 +14,7 @@ Connection	*Connection::event_accept(SocketManager *sm) {
 	socklen_t			conn_socklen;
 
 	socket_t s = accept(fd, (struct sockaddr *)&conn_sockaddr, &conn_socklen);
-	
+
 	if (s == -1) {
 		Logger::log_error(LOG_ALERT, "accept() failed");
 		throw acceptExcception();
@@ -84,6 +84,10 @@ const HttpConfig	*Connection::get_httpconfig() const
 const Request_Message		&Connection::get_request_message() const
 { return req_msg; }
 */
+
+
+struct sockaddr_in	Connection::get_local_sockaddr() const
+{ return local_sockaddr; }
 HttpConfig	*Connection::get_httpconfig()
 { return httpconfig; }
 Request_Message		&Connection::get_request_message()
