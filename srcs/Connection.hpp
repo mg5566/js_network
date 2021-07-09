@@ -45,7 +45,7 @@ public:
 	bool				get_listen() const;
 	Connection			*get_next() const;
 	socket_t			get_fd() const;
-	struct sockadddr_in	get_local_sockaddr() const;
+	struct sockaddr_in	get_local_sockaddr() const;
 	// const HttpConfig	*get_httpconfig() const;
 	// const Request_Message		&get_request_message() const;
 	HttpConfig	*get_httpconfig();

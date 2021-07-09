@@ -36,18 +36,18 @@ void Response_Generator::set_headers(std::string &res_msg, std::map<std::string,
     // res_msg += SPACE;
     // res_msg += ":";
     // res_msg += SPACE;
-    // res_msg += "nginx"; 
+    // res_msg += "nginx";
     // res_msg += CRLF;
 
 }
 
 std::string Response_Generator::gen_header(std::string key, std::vector<std::string> values) {
     std::string header;
-    
+
     header += key;
     header += SPACE;
     header += ":";
-    header += SPACE; 
+    header += SPACE;
 
     std::vector<std::string>::iterator it = values.begin();
     for (; it != values.end(); ++it) {
@@ -61,8 +61,10 @@ std::string Response_Generator::gen_header(std::string key, std::vector<std::str
 void Response_Generator::set_entity_body(std::string &res_msg, std::string &file_name) {
     res_msg += CRLF;
     std::fstream read_file(file_name.data());
-    // if (!read_file.is_open())
-        // throw exception
+    if (!read_file.is_open()) {
+      std::cout << "occured error : is not opened " << file_name << std::endl;
+      return ;
+    }
     std::string str;
     while (getline(read_file, str)) {
         res_msg += str;

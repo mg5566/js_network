@@ -13,7 +13,7 @@ Event_Handler::~Event_Handler() {}
 bool Event_Handler::append_buffer_to_request_message(const char *buf) {
   // origin_message.clear();
   // telnet 에서는 1개의 message 가 분할되어 올 수 있습니다. 따라서 계속 이어붙입니다.
-  
+
   // strlen 으로 조건을 확인하면 안된다.
   std::cout << "strlen : " << strlen(buf) << std::endl;
   if (strlen(buf) == 2)
@@ -27,7 +27,8 @@ void Event_Handler::parse_req_msg() {
 }
 
 // void Event_Handler::process_event(std::string response_message, Request_Message &req_mes, HttpConfig *httpconfig) {
-void Event_Handler::process_event(std::string response_message, Request_Message &req_mes, HttpConfig *httpconfig, struct sockadddr_in local_sockaddr_in) {
+// void Event_Handler::process_event(std::string &response_message, Request_Message &req_mes, HttpConfig *httpconfig, struct sockaddr_in local_sockaddr_in) {
+void Event_Handler::process_event(std::string &response_message, Request_Message &req_mes, struct sockaddr_in local_sockaddr_in) {
   // 일단 밖으로 뺏습니다. 아닐 경우 다시 살리세요.
   // 다시 살리면 set_request_message() 에선 clear 를 먼저 해야합니다.
   // 0. client 에게 message 받기
@@ -48,14 +49,15 @@ void Event_Handler::process_event(std::string response_message, Request_Message 
     // 1. 그 외 동작
 
   // 3. response message 생성
-  // void gen_res_msg(std::string &res_msg, std::map<std::string, std::vector<std::string> > &header_map, std::string &file_name);
-  // generator.gen_res_msg(response_message, req_mes.header_map, req_mes.start_line_map["URL"]);
-  LocationConfig *la = httpconfig->getLocationConfig(local_sockaddr_in.);
+  // LocationConfig *la = httpconfig->getLocationConfig(local_sockaddr_in.);
   generator.set_start_line(response_message);
   generator.set_headers(response_message, req_mes.header_map);
-  std::string file_name = "text.txt";
-  generator.set_entity_body(response_message, file_name); 
-
+  std::string file_name = "error_page.html";
+  in_port_t port = local_sockaddr_in.sin_port;
+  in_addr_t addr = local_sockaddr_in.sin_addr.s_addr;
+  // std::cout << "post is " << port << std::endl;
+  // std::cout << "addr is " << addr << std::endl;
+  generator.set_entity_body(response_message, file_name);
 }
 
 Request_Message &Event_Handler::get_req_msg() {

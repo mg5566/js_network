@@ -87,8 +87,8 @@ void	Kqueue::kqueue_process_events(SocketManager *sm)
 				// event_handler.set_request_message(c->buffer);
 				// event_handler.test_print_origin_message();
 				// kqueue_set_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
-				
-				// buffer 이어붙이는 기능		
+
+				// buffer 이어붙이는 기능
 				// if (event_handler.set_request_message(c->buffer))
 				if (event_handler.append_buffer_to_request_message(c->buffer))
 				{
@@ -98,7 +98,8 @@ void	Kqueue::kqueue_process_events(SocketManager *sm)
 					event_handler.test_print_origin_message();
 					kqueue_set_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
 				}
-				
+        // test 를 위해서 write event filter 를 추가합니다.
+        kqueue_set_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
 				memset(c->buffer, 0, recv_len);
 			}
 		}
@@ -107,7 +108,10 @@ void	Kqueue::kqueue_process_events(SocketManager *sm)
 			// generator response message
 			// const HttpConfig	*get_httpconfig() const;
 			std::string res_msg;
-			event_handler.process_event(res_msg, c->get_request_message(), c->get_httpconfig(), c->get_local_sockaddr());
+			// event_handler.process_event(res_msg, c->get_request_message(), c->get_httpconfig(), c->get_local_sockaddr());
+			event_handler.process_event(res_msg, c->get_request_message(), c->get_local_sockaddr());
+      std::cout << "===test print res_mes===" << std::endl;
+      std::cout << res_msg << std::endl;
 			// std::string res_msg = "HTTP/1.1 200 OK\r\nServer: jsnetwork\r\nContent-Length: 31\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n</html>\n";
 			send(event_list[i].ident, res_msg.c_str(), res_msg.size(), 0);
 			kqueue_set_event(c, EVFILT_READ, EV_ADD);
