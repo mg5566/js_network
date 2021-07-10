@@ -103,16 +103,22 @@ void	Kqueue::kqueue_process_events(SocketManager *sm)
 			}
 		}
 		else if (event_list[i].filter == EVFILT_WRITE) {
-			// c->get_data();
-			// generator response message
-			// const HttpConfig	*get_httpconfig() const;
-			std::string res_msg;
-			// event_handler.process_event(res_msg, c->get_request_message(), c->get_httpconfig(), c->get_local_sockaddr());
-			event_handler.process_event(res_msg, c->get_request_message(), c->get_local_sockaddr());
-      std::cout << "===test print res_mes===" << std::endl;
-      std::cout << res_msg << std::endl;
-			// std::string res_msg = "HTTP/1.1 200 OK\r\nServer: jsnetwork\r\nContent-Length: 31\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n</html>\n";
-			send(event_list[i].ident, res_msg.c_str(), res_msg.size(), 0);
+			if (event_list[i].flags & EV_EOF) {
+				Logger::log_error(LOG_ALERT, "%d kevent() reported about an %d reader disconnects", events, (int)event_list[i].ident);
+				sm->close_connection(c);
+			}
+			else {
+				// c->get_data();
+				// generator response message
+				// const HttpConfig	*get_httpconfig() const;
+				std::string res_msg;
+				// event_handler.process_event(res_msg, c->get_request_message(), c->get_httpconfig(), c->get_local_sockaddr());
+				event_handler.process_event(res_msg, c->get_request_message(), c->get_local_sockaddr());
+		std::cout << "===test print res_mes===" << std::endl;
+		std::cout << res_msg << std::endl;
+				// std::string res_msg = "HTTP/1.1 200 OK\r\nServer: jsnetwork\r\nContent-Length: 31\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n</html>\n";
+				send(event_list[i].ident, res_msg.c_str(), res_msg.size(), 0);
+			}
 		}
 	}
 }
