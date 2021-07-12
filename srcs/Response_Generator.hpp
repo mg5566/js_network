@@ -21,7 +21,7 @@ class Response_Generator {
 
     // void gen_res_msg(std::string &res_msg, std::map<std::string, std::vector<std::string> > &header_map, std::string &file_name);
 
-    void set_start_line(std::string &res_msg);
+    void set_start_line(std::string &res_msg,int status_code);
     void set_headers(std::string &res_msg, std::map<std::string, std::vector<std::string> > &header_map);
     void set_entity_body(std::string &res_msg, std::string &file_name);
 

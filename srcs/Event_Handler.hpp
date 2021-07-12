@@ -5,6 +5,7 @@
 #include <iostream>  // for test print
 #include <sys/socket.h>  // struct sockaddr_in
 #include <sys/types.h>  // struct sockaddr_in
+#include <fstream>  // file open
 
 #include "Request_Message.hpp"
 #include "Request_Parser.hpp"

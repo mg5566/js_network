@@ -4,12 +4,13 @@ Response_Generator::Response_Generator() {}
 
 Response_Generator::~Response_Generator() {}
 
-void Response_Generator::set_start_line(std::string &res_msg) {
+void Response_Generator::set_start_line(std::string &res_msg, int status_code) {
   res_msg += "HTTP/1.1";
   res_msg += SPACE;
-  res_msg += std::to_string(403);
+  res_msg += std::to_string(status_code);
   res_msg += SPACE;
   res_msg += "Forbidden";
+  // res_msg += status_map[status_code];
   res_msg += CRLF;
 }
 
