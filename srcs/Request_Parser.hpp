@@ -21,12 +21,9 @@ class Request_Parser {
     ~Request_Parser();
 
     void run_parsing(Request_Message &rm, std::string origin_message);
+
     std::vector<std::string> split_message(std::string message);
-    /*
-    void parse_start_line(std::string message);
-    void parse_header(std::string message);
-    void parse_entity(std::string message);
-    */
+
     void parse_start_line(Request_Message &rm, std::string message);
     void parse_header(Request_Message &rm, std::string message);
     void parse_entity(Request_Message &rm, std::string message);

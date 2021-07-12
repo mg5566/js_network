@@ -108,8 +108,8 @@ void	Kqueue::kqueue_process_events(SocketManager *sm)
 			// generator response message
 			// const HttpConfig	*get_httpconfig() const;
 			std::string res_msg;
-			// event_handler.process_event(res_msg, c->get_request_message(), c->get_httpconfig(), c->get_local_sockaddr());
-			event_handler.process_event(res_msg, c->get_request_message(), c->get_local_sockaddr());
+			event_handler.process_event(res_msg, c->get_request_message(), c->get_httpconfig(), c->get_local_sockaddr());
+			// event_handler.process_event(res_msg, c->get_request_message(), c->get_local_sockaddr());
       std::cout << "===test print res_mes===" << std::endl;
       std::cout << res_msg << std::endl;
 			// std::string res_msg = "HTTP/1.1 200 OK\r\nServer: jsnetwork\r\nContent-Length: 31\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE html>\n<html>\n</html>\n";
