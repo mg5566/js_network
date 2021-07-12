@@ -16,3 +16,21 @@
 2021/07/12 18:14:03 [alert] 1 kevent() error on 7 filter:-1
 2021/07/12 18:15:44 [alert] 1 kevent() reported about an closed connection 6
 2021/07/12 18:15:44 [alert] 1 kevent() error on 6 filter:-1
+2021/07/12 20:17:31 [alert] 1 kevent() reported about an closed connection 7
+2021/07/12 20:17:31 [alert] 1 kevent() error on 7 filter:-1
+2021/07/12 20:18:51 [alert] 1 kevent() reported about an closed connection 6
+2021/07/12 20:18:51 [alert] 1 kevent() error on 6 filter:-1
+2021/07/12 20:40:17 [alert] 1 kevent() reported about an closed connection 6
+2021/07/12 20:40:17 [alert] 1 kevent() error on 6 filter:-1
+2021/07/12 20:40:56 [alert] 1 kevent() reported about an closed connection 7
+2021/07/12 20:40:56 [alert] 1 kevent() error on 7 filter:-1
+2021/07/12 20:41:21 [alert] 1 kevent() reported about an closed connection 6
+2021/07/12 20:41:21 [alert] 1 kevent() error on 6 filter:-1
+2021/07/12 20:45:43 [alert] 1 kevent() reported about an closed connection 6
+2021/07/12 20:45:43 [alert] 1 kevent() error on 6 filter:-1
+2021/07/12 20:49:33 [alert] 1 kevent() reported about an closed connection 7
+2021/07/12 20:49:33 [alert] 1 kevent() error on 7 filter:-1
+2021/07/12 21:25:28 [alert] 1 kevent() reported about an closed connection 7
+2021/07/12 21:25:28 [alert] 1 kevent() error on 7 filter:-1
+2021/07/12 21:25:28 [alert] 1 kevent() reported about an closed connection 6
+2021/07/12 21:25:28 [alert] 1 kevent() error on 6 filter:-1

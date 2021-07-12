@@ -88,8 +88,8 @@ void	Kqueue::kqueue_process_events(SocketManager *sm)
 				// event_handler.test_print_origin_message();
 				// kqueue_set_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
 
+        /* 일단 append 기능이 동작하지 않아서 밑에서 test 를 진행합니다.
 				// buffer 이어붙이는 기능
-				// if (event_handler.set_request_message(c->buffer))
 				if (event_handler.append_buffer_to_request_message(c->buffer))
 				{
 					event_handler.parse_req_msg();
@@ -98,7 +98,12 @@ void	Kqueue::kqueue_process_events(SocketManager *sm)
 					event_handler.test_print_origin_message();
 					kqueue_set_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
 				}
+        */
         // test 를 위해서 write event filter 를 추가합니다.
+        std::cout << "read" << std::endl;
+        event_handler.append_buffer_to_request_message(c->buffer);
+        event_handler.parse_req_msg();
+        c->set_request_message(event_handler.get_req_msg());
         kqueue_set_event(c, EVFILT_WRITE, EV_ADD | EV_ONESHOT);
 				memset(c->buffer, 0, recv_len);
 			}
@@ -107,6 +112,7 @@ void	Kqueue::kqueue_process_events(SocketManager *sm)
 			// c->get_data();
 			// generator response message
 			// const HttpConfig	*get_httpconfig() const;
+      std::cout << "write" << std::endl;
 			std::string res_msg;
 			event_handler.process_event(res_msg, c->get_request_message(), c->get_httpconfig(), c->get_local_sockaddr());
 			// event_handler.process_event(res_msg, c->get_request_message(), c->get_local_sockaddr());
