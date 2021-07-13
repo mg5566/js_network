@@ -51,6 +51,9 @@ class Event_Handler {
     void processPutMethod();
     void processDeleteMethod();
 
+    // set error page
+    void setErrorPage(Request_Message &req_mes);
+
     /* test
     ** test 와 debug 를 위해서 print 를 하는 함수들을 작성할 예정입니다.
     */
