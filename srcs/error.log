@@ -38,3 +38,11 @@
 2021/07/12 22:36:46 [alert] 1 kevent() error on 6 filter:-1
 2021/07/12 22:38:50 [alert] 1 kevent() reported about an closed connection 6
 2021/07/12 22:38:50 [alert] 1 kevent() error on 6 filter:-1
+2021/07/13 13:55:29 [alert] 1 kevent() reported about an closed connection 6
+2021/07/13 13:55:29 [alert] 1 kevent() error on 6 filter:-1
+2021/07/13 13:59:23 [alert] 1 kevent() reported about an closed connection 7
+2021/07/13 13:59:23 [alert] 1 kevent() error on 7 filter:-1
+2021/07/13 14:06:41 [alert] 1 kevent() reported about an closed connection 6
+2021/07/13 14:06:41 [alert] 1 kevent() error on 6 filter:-1
+2021/07/13 14:18:57 [alert] 1 kevent() reported about an closed connection 6
+2021/07/13 14:18:57 [alert] 1 kevent() error on 6 filter:-1

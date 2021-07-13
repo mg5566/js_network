@@ -13,11 +13,12 @@
 class Response_Generator {
   private:
     std::map<int, std::string> status_map;
-    // std::string res_msg;  // 완성된 Response_Message
 
   public:
     Response_Generator();
     ~Response_Generator();
+
+    void set_status_map();
 
     // void gen_res_msg(std::string &res_msg, std::map<std::string, std::vector<std::string> > &header_map, std::string &file_name);
 

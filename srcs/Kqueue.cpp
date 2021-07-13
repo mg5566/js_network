@@ -100,7 +100,6 @@ void	Kqueue::kqueue_process_events(SocketManager *sm)
 				}
         */
         // test 를 위해서 write event filter 를 추가합니다.
-        std::cout << "read" << std::endl;
         event_handler.append_buffer_to_request_message(c->buffer);
         event_handler.parse_req_msg();
         c->set_request_message(event_handler.get_req_msg());
