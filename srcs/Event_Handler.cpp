@@ -34,7 +34,6 @@ void Event_Handler::process_event(std::string &response_message, Request_Message
 
   in_port_t port = local_sockaddr_in.sin_port;
   in_addr_t addr = local_sockaddr_in.sin_addr.s_addr;
-  // LocationConfig *lc = httpconfig->getLocationConfig(port, addr, req_mes.header_map["Host"][0], "/aaa/aaa");
   ServerConfig* server = httpconfig->getServerConfig(port, addr, req_mes.header_map["Host"][0]);
   LocationConfig *lc = server->getLocationConfig(req_mes.start_line_map["URI"]);
   if (lc == NULL)
@@ -42,6 +41,7 @@ void Event_Handler::process_event(std::string &response_message, Request_Message
   // request message 의 method 에 따라 분기를 나눕니다.
   std::string file_name;
   if (req_mes.start_line_map["method"] == "GET") {
+    // processGetMethod();
     // GET
     // 0. check if file_name exists
     // std::cout << "root : " << lc->getRoot() << std::endl;
@@ -52,24 +52,21 @@ void Event_Handler::process_event(std::string &response_message, Request_Message
     std::cout << "test file name : " << file_name << std::endl;
     // start line
     // generator.set_start_line(response_message);
-    std::fstream read_file(file_name, std::fstream::in);
+    std::fstream read_file(file_name.data());
     if (!read_file.is_open()) {
       /*
-      std::cout << "file cannt open" << std::endl;
       // generator.set_error_page();
       generator.set_start_line(response_message, 403);
       generator.set_headers(response_message, req_mes.header_map);
       std::string file_name_temp = "error_page.html";
       generator.set_entity_body(response_message, file_name_temp);
       */
-      setErrorPage(req_mes);
+      setErrorPage(response_message, req_mes, 404);
       return ;
     }
     generator.set_start_line(response_message, 200);
-    // headers
     generator.set_headers(response_message, req_mes.header_map);
-    // entity body
-    generator.set_entity_body(response_message, file_name);
+    generator.set_entity_body(response_message, file_name, 0);  // 성공에 대해선 0으로 판단합니다.
   /*
   } else if (req_mes.start_line_map["method"] == "POST") {
 
@@ -84,7 +81,7 @@ void Event_Handler::process_event(std::string &response_message, Request_Message
   */
   } else {
     // return error
-    setErrorPage(req_mes);
+    setErrorPage(response_message, req_mes, 403);
     /*
     std::string file_name = "error_page.html";
     generator.set_start_line(response_message, 403);
@@ -118,12 +115,14 @@ void processDeleteMethod() {
 
 }
 
-void Event_Handler::setErrorPage(Request_Message &req_mes) {
+void Event_Handler::setErrorPage(std::string &response_message, Request_Message &req_mes, int status_code) {
   std::cout << "file cannt open" << std::endl;
-  generator.set_start_line(response_message, 403);
+  generator.set_start_line(response_message, status_code);
   generator.set_headers(response_message, req_mes.header_map);
-  std::string file_name_temp = "error_page.html";
-  generator.set_entity_body(response_message, file_name_temp);
+  // std::string file_name_temp = "error_page.html";
+  std::string file_name_temp;
+
+  generator.set_entity_body(response_message, file_name_temp, status_code);
 }
 
 void Event_Handler::test_print_origin_message() {

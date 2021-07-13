@@ -81,6 +81,7 @@ void Response_Generator::set_start_line(std::string &res_msg, int status_code) {
   // res_msg += "Forbidden";
   res_msg += status_map[status_code];
   res_msg += CRLF;
+  std::cout << "test : " << res_msg << std::endl;
 }
 
 void Response_Generator::set_headers(std::string &res_msg, std::map<std::string, std::vector<std::string> > &header_map) {
@@ -88,6 +89,8 @@ void Response_Generator::set_headers(std::string &res_msg, std::map<std::string,
   for (; map_it != header_map.end(); ++map_it) {
     res_msg += gen_header(map_it->first, map_it->second);
   }
+  res_msg += CRLF;
+  // 향후 수정이 필요합니다.
 }
 
 std::string Response_Generator::gen_header(std::string key, std::vector<std::string> values) {
@@ -105,8 +108,10 @@ std::string Response_Generator::gen_header(std::string key, std::vector<std::str
   return (header);
 }
 
-void Response_Generator::set_entity_body(std::string &res_msg, std::string &file_name) {
-  res_msg += CRLF;
+void Response_Generator::set_entity_body(std::string &res_msg, std::string &file_name, int status_code) {
+  if (status_code != 0)
+    file_name = genErrorPageFileName(status_code);
+
   std::fstream read_file(file_name.data());
   if (!read_file.is_open()) {
     std::cout << "occured error : is not opened " << file_name << std::endl;
@@ -118,4 +123,22 @@ void Response_Generator::set_entity_body(std::string &res_msg, std::string &file
     res_msg += "\n";
    }
   read_file.close();
+}
+
+std::string Response_Generator::genErrorPageFileName(int status_code) {
+  std::string temp;
+  temp += std::to_string(status_code);
+  temp += "_";
+
+  std::string name(status_map[status_code]);
+  size_t pos;
+  while ((pos = name.find(" ")) != name.npos) {
+    std::cout << "pos : " << pos << std::endl;
+    name.replace(pos, 1, "_");
+  }
+
+  temp += name;
+  temp += ".html";
+
+  return (temp);
 }

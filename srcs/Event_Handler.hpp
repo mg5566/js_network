@@ -18,7 +18,7 @@ class Event_Handler {
     Request_Message     request_message;
     Request_Parser      parser;
     // 향후 구현 예정입니다.
-    std::string         response_message;
+    // std::string         response_message;
     Response_Generator  generator;
 
     // 향후 nginx config 를 받을 변수
@@ -52,7 +52,7 @@ class Event_Handler {
     void processDeleteMethod();
 
     // set error page
-    void setErrorPage(Request_Message &req_mes);
+    void setErrorPage(std::string &response_message, Request_Message &req_mes, int status_code);
 
     /* test
     ** test 와 debug 를 위해서 print 를 하는 함수들을 작성할 예정입니다.
