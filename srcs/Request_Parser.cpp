@@ -9,6 +9,7 @@ Request_Parser::~Request_Parser() {
 void Request_Parser::run_parsing(Request_Message &rm, std::string origin_message) {
   // std::cout << "===test print origin message===" << std::endl;
   // std::cout << origin_message << std::endl;
+
   std::vector<std::string> message_vector;
 
   message_vector = split_message(origin_message);  // start / header / body
@@ -65,7 +66,7 @@ void Request_Parser::parse_start_line(Request_Message &rm, std::string message) 
 // Accept-Charsets: value_1(,) value_2crlf
 // Accept-Length: value_1(,) value_2crlf
 // crlf
-// 
+//
 void Request_Parser::parse_header(Request_Message &rm, std::string message) {
   std::size_t colon_pos = message.find(":");
   while (colon_pos != message.npos) {
