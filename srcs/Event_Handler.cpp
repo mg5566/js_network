@@ -29,7 +29,6 @@ void Event_Handler::parse_req_msg() {
 }
 
 void Event_Handler::process_event(std::string &response_message, Request_Message &req_mes, HttpConfig *httpconfig, struct sockaddr_in local_sockaddr_in) {
-  std::cout << "process_event" << std::endl;
   origin_message.clear();
 
   in_port_t port = local_sockaddr_in.sin_port;
@@ -41,35 +40,27 @@ void Event_Handler::process_event(std::string &response_message, Request_Message
   // request message 의 method 에 따라 분기를 나눕니다.
   std::string file_name;
   if (req_mes.start_line_map["method"] == "GET") {
-    // processGetMethod();
     // GET
-    // 0. check if file_name exists
-    // std::cout << "root : " << lc->getRoot() << std::endl;
-    // std::cout << "URI  : " << lc->getUri() << std::endl;
+    // 0. file setting
     file_name = lc->getRoot() + req_mes.start_line_map["URI"];
     // file_name = lc->getUri() + lc->getRoot();
     // file_name = req_mes.start_line_map["URI"];
     std::cout << "test file name : " << file_name << std::endl;
-    // start line
-    // generator.set_start_line(response_message);
+    // 1. check file exist
     std::fstream read_file(file_name.data());
     if (!read_file.is_open()) {
-      /*
-      // generator.set_error_page();
-      generator.set_start_line(response_message, 403);
-      generator.set_headers(response_message, req_mes.header_map);
-      std::string file_name_temp = "error_page.html";
-      generator.set_entity_body(response_message, file_name_temp);
-      */
       setErrorPage(response_message, req_mes, 404);
-      return ;
+    } else {
+      // 2. gen response message
+      generator.set_start_line(response_message, 200);
+      generator.set_headers(response_message, req_mes.header_map);
+      generator.set_entity_body(response_message, file_name, 0);  // 성공에 대해선 0으로 판단합니다.
     }
-    generator.set_start_line(response_message, 200);
-    generator.set_headers(response_message, req_mes.header_map);
-    generator.set_entity_body(response_message, file_name, 0);  // 성공에 대해선 0으로 판단합니다.
-  /*
   } else if (req_mes.start_line_map["method"] == "POST") {
+    // POST
+    // append 를 하도록 만들어보겠습니다.
 
+  /*
   } else if (req_mes.start_line_map["method"] == "DELETE") {
 
   } else if (req_mes.start_line_map["method"] == "PUT") {
